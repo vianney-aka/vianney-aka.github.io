@@ -63,22 +63,25 @@ window.addEventListener('scroll', highlightNavLink);
 // THEME TOGGLE
 // ===================================
 const themeToggle = document.getElementById('themeToggle');
-let isDark = true;
+
+// Check for saved theme preference or default to dark mode
+const currentTheme = localStorage.getItem('theme') || 'dark';
+if (currentTheme === 'light') {
+  document.body.classList.add('light-mode');
+}
 
 themeToggle.addEventListener('click', () => {
-  isDark = !isDark;
-  document.body.style.background = isDark ? '#0A0E27' : '#FFFFFF';
-  document.body.style.color = isDark ? '#FFFFFF' : '#0A0E27';
-  themeToggle.textContent = isDark ? '🌙' : '☀️';
+  document.body.classList.toggle('light-mode');
   
-  // Update CSS variables for light mode
-  if (!isDark) {
-    document.documentElement.style.setProperty('--dark', '#FFFFFF');
-    document.documentElement.style.setProperty('--light', '#0A0E27');
-  } else {
-    document.documentElement.style.setProperty('--dark', '#0A0E27');
-    document.documentElement.style.setProperty('--light', '#FFFFFF');
-  }
+  // Save theme preference
+  const theme = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+  localStorage.setItem('theme', theme);
+  
+  // Add animation to toggle button
+  themeToggle.style.transform = 'rotate(360deg)';
+  setTimeout(() => {
+    themeToggle.style.transform = 'rotate(0deg)';
+  }, 300);
 });
 
 // ===================================
