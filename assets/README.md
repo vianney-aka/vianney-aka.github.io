@@ -29,6 +29,10 @@ Ce dossier contient toutes les ressources visuelles du portfolio.
    - Peut être une photo du hackathon
 
 ### Logos
+- **logo.png** (SVG/PNG, 512x512px recommandé, < 100KB)
+  - Logo personnel Vianney AKA utilisé dans la navigation
+  - Palette : vert principal `#00A651`, blanc `#FFFFFF`
+  - Conserver fond transparent ou cercle plein
 - **logo-unesco.png** (200x200px, < 50KB)
   - Logo officiel UNESCO Impact'Lab
   - Format PNG avec transparence
@@ -70,6 +74,7 @@ Ce dossier contient toutes les ressources visuelles du portfolio.
 ### Résolution
 - **Desktop** : 72-96 DPI
 - **Print** : 300 DPI (non nécessaire ici)
+- **Logo** : exporter en 2 tailles (44px pour navbar, 512px pour usages sociaux)
 
 ### Nommage
 - Utiliser des tirets : `project-name.jpg`
@@ -119,10 +124,11 @@ En attendant les vraies images, vous pouvez utiliser :
 - [ ] Toutes les images sont optimisées (< taille max)
 - [ ] Les noms de fichiers correspondent au HTML
 - [ ] Les images sont en 72-96 DPI
-- [ ] Format correct (JPG pour photos, PNG pour logos)
+- [ ] Format correct (JPG pour photos, PNG/SVG pour logos)
 - [ ] Alt text descriptif dans le HTML
 - [ ] Images testées sur mobile et desktop
 - [ ] Pas d'images copyrightées sans autorisation
+- [ ] Logo exporté en deux tailles (44px / 512px)
 
 ## 📝 Notes importantes
 

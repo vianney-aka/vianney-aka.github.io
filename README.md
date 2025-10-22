@@ -32,11 +32,20 @@ Portfolio moderne et performant pour développeur Full Stack spécialisé en e-l
 ```
 windsurf-project/
 ├── index.html          # Page principale
-├── styles.css          # Styles complets
-├── script.js           # Logique JavaScript
-├── README.md           # Documentation
+├── README.md           # Guide principal
+├── docs/               # Documentation détaillée
+│   ├── START_HERE.md
+│   ├── QUICKSTART.md
+│   ├── CUSTOMIZATION.md
+│   ├── DEPLOYMENT.md
+│   ├── ... (autres guides)
+│   └── FINAL_SUMMARY.md
 ├── .gitignore          # Fichiers à ignorer
-└── assets/             # Ressources
+├── robots.txt          # SEO
+├── sitemap.xml         # SEO
+└── assets/             # Styles, scripts et ressources
+    ├── styles.css
+    ├── script.js
     ├── profile.jpg
     ├── project-impactlab.jpg
     ├── project-prosper.jpg
@@ -276,7 +285,16 @@ Ce projet est sous licence MIT. Vous êtes libre de l'utiliser et le modifier.
 
 ---
 
-## 📚 Ressources Utiles
+## 📚 Documentation Complète
+
+- **docs/START_HERE.md** – Vue d’ensemble et prochaines étapes
+- **docs/QUICKSTART.md** – Démarrage rapide (15 min)
+- **docs/INDEX.md** – Plan de la documentation
+- **docs/CUSTOMIZATION.md** – Personnalisation du portfolio
+- **docs/DEPLOYMENT.md** – Déploiement GitHub Pages
+- **docs/SEO_GUIDE.md** – Référencement et sitemap
+- **docs/UX_UI_IMPROVEMENTS.md** – Design system
+- **docs/FINAL_SUMMARY.md** – Récapitulatif global
 
 - [GitHub Pages Documentation](https://docs.github.com/en/pages)
 - [MDN Web Docs](https://developer.mozilla.org)

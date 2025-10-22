@@ -94,7 +94,7 @@ URL : `https://votre-username.github.io`
 
 ### Changer les couleurs
 
-`styles.css` ligne 5-10 :
+`assets/styles.css` lignes 5-12 :
 ```css
 --primary: #0066FF;      /* Votre couleur principale */
 --secondary: #00C853;    /* Votre couleur secondaire */

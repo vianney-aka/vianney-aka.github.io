@@ -28,8 +28,8 @@ Tous les fichiers ont été créés avec succès. Voici comment procéder mainte
 
 ### ✅ Fichiers Principaux
 - **index.html** - Page complète du portfolio
-- **styles.css** - Design moderne et responsive
-- **script.js** - Toutes les interactions
+- **assets/styles.css** - Design moderne et responsive
+- **assets/script.js** - Toutes les interactions
 
 ### ✅ Documentation (11 fichiers)
 - **INDEX.md** - Navigation de la documentation

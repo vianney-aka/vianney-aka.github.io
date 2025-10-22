@@ -26,8 +26,8 @@ windsurf-project/                    [RACINE DU PROJET]
 │
 ├── 🌐 FICHIERS PRINCIPAUX (3)
 │   ├── index.html          19 KB   ✅ Page HTML5 complète
-│   ├── styles.css          18 KB   ✅ Design system moderne
-│   └── script.js           12 KB   ✅ Interactions JavaScript
+│   ├── assets/styles.css   20 KB   ✅ Design system moderne
+│   └── assets/script.js    12 KB   ✅ Interactions JavaScript
 │
 ├── 📚 DOCUMENTATION (12 fichiers - 100 KB)
 │   ├── START_HERE.md        8 KB   🚀 COMMENCEZ ICI
@@ -78,9 +78,10 @@ windsurf-project/                    [RACINE DU PROJET]
   - Contact avec formulaire
   - Footer complet
 
-### 🎨 Design CSS (styles.css)
+### 🎨 Design CSS (assets/styles.css)
 - ✅ Design system avec variables CSS
-- ✅ Palette : Bleu (#0066FF) + Vert (#00C853)
+- ✅ Palette sombre : Bleu (#2D7BFF) + Vert (#2ED573)
+- ✅ Palette claire : Tons pastels (#5C97FF, #55E08E, #DEE7FF)
 - ✅ Typographie : Poppins + Inter
 - ✅ Responsive mobile-first
 - ✅ Animations CSS fluides

@@ -16,14 +16,24 @@ const navToggle = document.getElementById('navToggle');
 const navMenu = document.getElementById('navMenu');
 const navLinks = document.querySelectorAll('.nav-link');
 
-// Sticky navbar on scroll
-window.addEventListener('scroll', () => {
+// Sticky navbar on scroll (optimized with requestAnimationFrame)
+let ticking = false;
+
+function updateNavbar() {
   if (window.scrollY > 100) {
     navbar.classList.add('scrolled');
   } else {
     navbar.classList.remove('scrolled');
   }
-});
+  ticking = false;
+}
+
+window.addEventListener('scroll', () => {
+  if (!ticking) {
+    window.requestAnimationFrame(updateNavbar);
+    ticking = true;
+  }
+}, { passive: true });
 
 // Mobile menu toggle
 navToggle.addEventListener('click', () => {
@@ -57,7 +67,18 @@ function highlightNavLink() {
   });
 }
 
-window.addEventListener('scroll', highlightNavLink);
+// Optimized scroll listener with throttle
+let highlightTicking = false;
+
+window.addEventListener('scroll', () => {
+  if (!highlightTicking) {
+    window.requestAnimationFrame(() => {
+      highlightNavLink();
+      highlightTicking = false;
+    });
+    highlightTicking = true;
+  }
+}, { passive: true });
 
 // ===================================
 // THEME TOGGLE
@@ -99,14 +120,28 @@ filterBtns.forEach(btn => {
 
     const filter = btn.getAttribute('data-filter');
 
-    projectCards.forEach(card => {
+    projectCards.forEach((card, index) => {
       const category = card.getAttribute('data-category');
       
       if (filter === 'all' || category === filter) {
-        card.style.display = 'block';
-        card.style.animation = 'fadeIn 0.5s ease-out';
+        // Stagger animation for smooth appearance
+        setTimeout(() => {
+          card.style.display = 'block';
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(20px)';
+          
+          requestAnimationFrame(() => {
+            card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+          });
+        }, index * 50);
       } else {
-        card.style.display = 'none';
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(-20px)';
+        setTimeout(() => {
+          card.style.display = 'none';
+        }, 300);
       }
     });
   });
@@ -249,17 +284,28 @@ function typeWriter(element, text, speed = 100) {
 // }
 
 // ===================================
-// PARALLAX EFFECT
+// PARALLAX EFFECT (Optimized)
 // ===================================
-window.addEventListener('scroll', () => {
+let parallaxTicking = false;
+
+function updateParallax() {
   const scrolled = window.pageYOffset;
   const parallaxElements = document.querySelectorAll('.hero-image');
   
   parallaxElements.forEach(el => {
-    const speed = 0.5;
-    el.style.transform = `translateY(${scrolled * speed}px)`;
+    const speed = 0.3;
+    el.style.transform = `translate3d(0, ${scrolled * speed}px, 0)`;
   });
-});
+  
+  parallaxTicking = false;
+}
+
+window.addEventListener('scroll', () => {
+  if (!parallaxTicking) {
+    window.requestAnimationFrame(updateParallax);
+    parallaxTicking = true;
+  }
+}, { passive: true });
 
 // ===================================
 // CURSOR TRAIL EFFECT (Optional)
@@ -276,7 +322,7 @@ document.addEventListener('mousemove', (e) => {
 });
 
 // ===================================
-// LAZY LOADING IMAGES
+// LAZY LOADING IMAGES (Enhanced)
 // ===================================
 const images = document.querySelectorAll('img[loading="lazy"]');
 
@@ -284,10 +330,23 @@ const imageObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       const img = entry.target;
-      img.src = img.src; // Trigger load
+      // Add fade-in effect
+      img.style.opacity = '0';
+      img.style.transition = 'opacity 0.3s ease-in';
+      
+      if (img.complete) {
+        img.style.opacity = '1';
+      } else {
+        img.addEventListener('load', () => {
+          img.style.opacity = '1';
+        });
+      }
+      
       imageObserver.unobserve(img);
     }
   });
+}, {
+  rootMargin: '50px'
 });
 
 images.forEach(img => imageObserver.observe(img));
@@ -308,8 +367,7 @@ function debounce(func, wait = 10) {
   };
 }
 
-// Apply debounce to scroll-heavy functions
-window.addEventListener('scroll', debounce(highlightNavLink, 10));
+// Debounce already applied via requestAnimationFrame above
 
 // ===================================
 // EASTER EGG: KONAMI CODE

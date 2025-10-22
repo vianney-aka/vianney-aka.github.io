@@ -12,8 +12,9 @@ Portfolio moderne et performant pour **Aka Kouadio Bonnaventure Vianney**, déve
 windsurf-project/
 │
 ├── 📄 index.html              (19 KB) - Page principale HTML5 sémantique
-├── 🎨 styles.css              (18 KB) - Design system complet et responsive
-├── ⚡ script.js               (12 KB) - Interactions et animations JavaScript
+├── 📁 assets/
+│   ├── 🎨 styles.css          (20 KB) - Design system complet et responsive
+│   └── ⚡ script.js           (12 KB) - Interactions et animations JavaScript
 ├── 🚫 .gitignore              (824 B) - Fichiers à ignorer par Git
 │
 ├── 📚 Documentation/
@@ -182,11 +183,21 @@ Timeline interactive avec 4 expériences :
 
 ### Couleurs
 ```css
---primary: #0066FF      /* Bleu tech */
---secondary: #00C853    /* Vert impact */
---dark: #0A0E27         /* Fond sombre */
---light: #FFFFFF        /* Blanc */
---accent: #FF6B6B       /* Rouge accent */
+/* Mode sombre */
+--primary: #2D7BFF;
+--primary-light: #5C97FF;
+--secondary: #2ED573;
+--secondary-light: #55E08E;
+--bg-primary: #050B1A;
+--bg-secondary: #0E1629;
+--text-primary: #F5F8FF;
+
+/* Mode clair */
+body.light-mode {
+  --bg-primary: #F6F9FF;
+  --bg-secondary: #ECF2FF;
+  --text-primary: #0B1633;
+}
 ```
 
 ### Typographie
@@ -307,8 +318,8 @@ git push origin main
 
 ### Fichiers Créés
 - [x] index.html (structure complète)
-- [x] styles.css (design system complet)
-- [x] script.js (toutes fonctionnalités)
+- [x] assets/styles.css (design system complet)
+- [x] assets/script.js (toutes fonctionnalités)
 - [x] .gitignore (configuration Git)
 - [x] README.md (documentation principale)
 - [x] QUICKSTART.md (démarrage rapide)

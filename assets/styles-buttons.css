@@ -1,0 +1,81 @@
+/* ===================================
+   BUTTONS - MISSING CRITICAL STYLES
+   =================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: var(--transition);
+  cursor: pointer;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.btn:hover::before {
+  opacity: 1;
+}
+
+.btn:focus {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+/* Primary Button */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: var(--text-primary);
+  box-shadow: 0 8px 24px rgba(45, 123, 255, 0.35);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  box-shadow: 0 12px 32px rgba(45, 123, 255, 0.45);
+  transform: translateY(-2px);
+}
+
+/* Secondary Button */
+.btn-secondary {
+  background: rgba(46, 213, 115, 0.12);
+  color: var(--text-primary);
+  border: 2px solid rgba(46, 213, 115, 0.45);
+}
+
+.btn-secondary:hover {
+  background: rgba(46, 213, 115, 0.2);
+  border-color: rgba(46, 213, 115, 0.7);
+  box-shadow: 0 8px 24px rgba(46, 213, 115, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Light Mode Adjustments */
+body.light-mode .btn-primary {
+  box-shadow: 0 8px 24px rgba(45, 123, 255, 0.25);
+}
+
+body.light-mode .btn-secondary {
+  background: rgba(46, 213, 115, 0.08);
+  border-color: rgba(46, 213, 115, 0.35);
+}
