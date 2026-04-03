@@ -1155,12 +1155,22 @@ const AdminDashboard = (function () {
   }
 
   function clearLocalStorage() {
-    if (!confirm('Vider le localStorage ? Le site public perdra ses données dynamiques.')) return;
+    if (!confirm('Vider le localStorage ? Les données seront re-synchronisées depuis la DB.')) return;
     var analyticsBackup = localStorage.getItem(ANALYTICS_KEY);
     localStorage.clear();
     // Keep analytics
     if (analyticsBackup) localStorage.setItem(ANALYTICS_KEY, analyticsBackup);
-    toast('localStorage vidé (analytics conservées)', 'success');
+    // Re-sync from SQLite DB so public site keeps content
+    try {
+      if (dbReady && typeof PortfolioDB !== 'undefined' && PortfolioDB.syncToLocalStorage) {
+        PortfolioDB.syncToLocalStorage();
+        toast('localStorage vidé et re-synchronisé depuis la DB', 'success');
+      } else {
+        toast('localStorage vidé (DB non prête, resync au prochain chargement)', 'info');
+      }
+    } catch (err) {
+      toast('localStorage vidé, erreur resync: ' + err.message, 'error');
+    }
     loadCacheInfo();
   }
 
