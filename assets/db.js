@@ -275,7 +275,12 @@ const PortfolioDB = (function () {
   // Generic CRUD helpers
   // ===================================
   function getAll(table) {
-    const result = db.exec(`SELECT * FROM ${table} ORDER BY sort_order ASC, id ASC`);
+    var result;
+    try {
+      result = db.exec(`SELECT * FROM ${table} ORDER BY sort_order ASC, id ASC`);
+    } catch (e) {
+      result = db.exec(`SELECT * FROM ${table} ORDER BY id ASC`);
+    }
     if (!result.length) return [];
     const cols = result[0].columns;
     return result[0].values.map(row => {
