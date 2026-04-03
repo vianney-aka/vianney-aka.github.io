@@ -321,7 +321,7 @@ const PortfolioDB = (function () {
   }
 
   function setSetting(key, value) {
-    db.run('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)', [key, value]);
+    db.run('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)', [key, value !== undefined ? value : '']);
   }
 
   function getAllSettings() {
@@ -347,7 +347,7 @@ const PortfolioDB = (function () {
     const fields = [];
     const vals = [];
     Object.keys(data).forEach(k => {
-      if (k !== 'id') { fields.push(`${k} = ?`); vals.push(data[k]); }
+      if (k !== 'id') { fields.push(`${k} = ?`); vals.push(data[k] !== undefined ? data[k] : ''); }
     });
     vals.push(id);
     db.run(`UPDATE projects SET ${fields.join(', ')} WHERE id = ?`, vals);
@@ -362,7 +362,7 @@ const PortfolioDB = (function () {
   }
 
   function updateSkillCategory(id, data) {
-    db.run('UPDATE skill_categories SET name=?, icon=?, sort_order=? WHERE id=?', [data.name, data.icon || '', data.sort_order || 0, id]);
+    db.run('UPDATE skill_categories SET name=?, icon=?, sort_order=? WHERE id=?', [data.name || '', data.icon || '', data.sort_order || 0, id]);
   }
 
   function getSkillsByCategory(catId) {
@@ -382,43 +382,43 @@ const PortfolioDB = (function () {
   }
 
   function updateSkill(id, data) {
-    db.run('UPDATE skills SET name=?, level=? WHERE id=?', [data.name, data.level, id]);
+    db.run('UPDATE skills SET name=?, level=? WHERE id=?', [data.name || '', data.level || 80, id]);
   }
 
   // ===================================
   // Experiences CRUD
   // ===================================
   function insertExperience(data) {
-    db.run('INSERT INTO experiences (date_range, title, company, items_json, sort_order) VALUES (?,?,?,?,?)', [data.date_range, data.title, data.company || '', data.items_json || '[]', data.sort_order || 0]);
+    db.run('INSERT INTO experiences (date_range, title, company, items_json, sort_order) VALUES (?,?,?,?,?)', [data.date_range || '', data.title || '', data.company || '', data.items_json || '[]', data.sort_order || 0]);
     return db.exec('SELECT last_insert_rowid() as id')[0].values[0][0];
   }
 
   function updateExperience(id, data) {
-    db.run('UPDATE experiences SET date_range=?, title=?, company=?, items_json=?, sort_order=? WHERE id=?', [data.date_range, data.title, data.company || '', data.items_json || '[]', data.sort_order || 0, id]);
+    db.run('UPDATE experiences SET date_range=?, title=?, company=?, items_json=?, sort_order=? WHERE id=?', [data.date_range || '', data.title || '', data.company || '', data.items_json || '[]', data.sort_order || 0, id]);
   }
 
   // ===================================
   // Education CRUD
   // ===================================
   function insertEducation(data) {
-    db.run('INSERT INTO education (date_range, title, school, description, sort_order) VALUES (?,?,?,?,?)', [data.date_range, data.title, data.school || '', data.description || '', data.sort_order || 0]);
+    db.run('INSERT INTO education (date_range, title, school, description, sort_order) VALUES (?,?,?,?,?)', [data.date_range || '', data.title || '', data.school || '', data.description || '', data.sort_order || 0]);
     return db.exec('SELECT last_insert_rowid() as id')[0].values[0][0];
   }
 
   function updateEducation(id, data) {
-    db.run('UPDATE education SET date_range=?, title=?, school=?, description=?, sort_order=? WHERE id=?', [data.date_range, data.title, data.school || '', data.description || '', data.sort_order || 0, id]);
+    db.run('UPDATE education SET date_range=?, title=?, school=?, description=?, sort_order=? WHERE id=?', [data.date_range || '', data.title || '', data.school || '', data.description || '', data.sort_order || 0, id]);
   }
 
   // ===================================
   // Certifications CRUD
   // ===================================
   function insertCertification(data) {
-    db.run('INSERT INTO certifications (name, sort_order) VALUES (?,?)', [data.name, data.sort_order || 0]);
+    db.run('INSERT INTO certifications (name, sort_order) VALUES (?,?)', [data.name || '', data.sort_order || 0]);
     return db.exec('SELECT last_insert_rowid() as id')[0].values[0][0];
   }
 
   function updateCertification(id, data) {
-    db.run('UPDATE certifications SET name=?, sort_order=? WHERE id=?', [data.name, data.sort_order || 0, id]);
+    db.run('UPDATE certifications SET name=?, sort_order=? WHERE id=?', [data.name || '', data.sort_order || 0, id]);
   }
 
   // ===================================
