@@ -9,9 +9,8 @@ Sitemap: https://vianney-aka.github.io/sitemap.xml
 # Crawl-delay (optionnel, en secondes)
 Crawl-delay: 1
 
-# Disallow specific paths (si nécessaire)
-# Disallow: /assets/
-# Disallow: /temp/
+# Disallow admin area
+Disallow: /viak/
 
 # Allow specific bots
 User-agent: Googlebot

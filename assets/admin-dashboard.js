@@ -642,30 +642,47 @@ const AdminDashboard = (function () {
   }
 
   // ===================================
-  // IMAGE UPLOAD
+  // IMAGE UPLOAD + COMPRESSION
   // ===================================
-  function handleImageUpload(inputEl, previewEl, urlInputEl) {
-    inputEl.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      if (!file.type.startsWith('image/')) {
-        toast('Fichier non valide. Sélectionnez une image.', 'error');
-        return;
-      }
-      if (file.size > 2 * 1024 * 1024) {
-        toast('Image trop volumineuse (max 2 Mo)', 'error');
-        return;
-      }
+  function compressImage(file, maxW, maxH, quality) {
+    maxW = maxW || 800;
+    maxH = maxH || 600;
+    quality = quality || 0.75;
+    return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (ev) => {
-        const dataUrl = ev.target.result;
-        if (previewEl) {
-          previewEl.src = dataUrl;
-          previewEl.style.display = 'block';
-        }
-        if (urlInputEl) urlInputEl.value = dataUrl;
+        const img = new Image();
+        img.onload = () => {
+          let w = img.width, h = img.height;
+          if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+          if (h > maxH) { w = Math.round(w * maxH / h); h = maxH; }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.onerror = reject;
+        img.src = ev.target.result;
       };
+      reader.onerror = reject;
       reader.readAsDataURL(file);
+    });
+  }
+
+  function handleImageUpload(inputEl, previewEl, urlInputEl) {
+    inputEl.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (!file.type.startsWith('image/')) { toast('Fichier non valide', 'error'); return; }
+      if (file.size > 5 * 1024 * 1024) { toast('Image trop volumineuse (max 5 Mo)', 'error'); return; }
+      try {
+        const dataUrl = await compressImage(file);
+        if (previewEl) { previewEl.src = dataUrl; previewEl.style.display = 'block'; }
+        if (urlInputEl) urlInputEl.value = dataUrl;
+        toast('Image chargée !', 'success');
+      } catch (err) { toast('Erreur de chargement image', 'error'); }
     });
   }
 
@@ -673,27 +690,28 @@ const AdminDashboard = (function () {
     document.addEventListener('click', (e) => {
       const btn = e.target.closest('.btn-upload-img');
       if (!btn) return;
-      const card = btn.closest('.item-card') || btn.closest('.panel-body');
-      if (!card) return;
-      const fileInput = card.querySelector('.img-file-input');
+      const zone = btn.closest('.image-upload-zone') || btn.closest('.hero-photo-upload');
+      if (!zone) return;
+      const fileInput = zone.querySelector('.img-file-input');
       if (fileInput) fileInput.click();
     });
 
-    document.addEventListener('change', (e) => {
+    document.addEventListener('change', async (e) => {
       if (!e.target.classList.contains('img-file-input')) return;
       const file = e.target.files[0];
       if (!file) return;
       if (!file.type.startsWith('image/')) { toast('Fichier non valide', 'error'); return; }
-      if (file.size > 2 * 1024 * 1024) { toast('Max 2 Mo', 'error'); return; }
-      const card = e.target.closest('.item-card') || e.target.closest('.panel-body');
-      const preview = card.querySelector('.img-preview');
-      const urlInput = card.querySelector('[data-field="image_url"]') || card.querySelector('#heroPhoto');
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        if (preview) { preview.src = ev.target.result; preview.style.display = 'block'; }
-        if (urlInput) urlInput.value = ev.target.result;
-      };
-      reader.readAsDataURL(file);
+      if (file.size > 5 * 1024 * 1024) { toast('Max 5 Mo', 'error'); return; }
+      const zone = e.target.closest('.image-upload-zone') || e.target.closest('.hero-photo-upload');
+      if (!zone) return;
+      const preview = zone.querySelector('.img-preview');
+      const urlInput = zone.querySelector('[data-field="image_url"]') || zone.querySelector('#heroPhoto');
+      try {
+        const dataUrl = await compressImage(file);
+        if (preview) { preview.src = dataUrl; preview.style.display = 'block'; }
+        if (urlInput) urlInput.value = dataUrl;
+        toast('Image chargée ! Pensez à sauvegarder.', 'success');
+      } catch (err) { toast('Erreur compression image', 'error'); }
       e.target.value = '';
     });
   }

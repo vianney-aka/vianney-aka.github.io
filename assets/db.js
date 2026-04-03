@@ -253,7 +253,22 @@ const PortfolioDB = (function () {
       education: getAll('education'),
       certifications: getAll('certifications')
     };
-    localStorage.setItem(SYNC_KEY, JSON.stringify(allData));
+    try {
+      const json = JSON.stringify(allData);
+      localStorage.setItem(SYNC_KEY, json);
+    } catch (e) {
+      console.error('localStorage sync failed (quota?):', e);
+      // Try without Base64 images to fit in quota
+      try {
+        const lite = JSON.parse(JSON.stringify(allData));
+        if (lite.projects) lite.projects.forEach(p => {
+          if (p.image_url && p.image_url.startsWith('data:')) p.image_url = '';
+        });
+        if (lite.settings && lite.settings.hero_photo && lite.settings.hero_photo.startsWith('data:')) lite.settings.hero_photo = '';
+        localStorage.setItem(SYNC_KEY, JSON.stringify(lite));
+        console.warn('localStorage sync: images stripped to fit quota');
+      } catch (e2) { console.error('localStorage sync totally failed:', e2); }
+    }
   }
 
   // ===================================
