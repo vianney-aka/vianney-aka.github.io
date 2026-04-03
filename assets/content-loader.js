@@ -235,11 +235,78 @@
     try { return JSON.parse(str || '[]'); } catch { return fallback; }
   }
 
+  // Re-trigger scroll reveal for dynamically created elements
+  function reInitReveal() {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var parent = entry.target.parentElement;
+          var siblings = parent ? Array.from(parent.children) : [];
+          var idx = siblings.indexOf(entry.target);
+          var delay = Math.max(0, idx) * 100;
+          setTimeout(function () { entry.target.classList.add('revealed'); }, delay);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    var selectors = '.project-card, .skill-category, .timeline-item, .info-item, .certifications';
+    document.querySelectorAll(selectors).forEach(function (el) {
+      if (!el.classList.contains('revealed')) observer.observe(el);
+    });
+
+    // Re-attach project filter buttons to new cards
+    var filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(function (btn) {
+      btn.removeEventListener('click', btn._filterHandler);
+      btn._filterHandler = function () {
+        filterBtns.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var filter = btn.getAttribute('data-filter');
+        document.querySelectorAll('.project-card').forEach(function (card, index) {
+          var category = card.getAttribute('data-category');
+          if (filter === 'all' || category === filter) {
+            setTimeout(function () {
+              card.style.display = '';
+              card.classList.remove('revealed');
+              requestAnimationFrame(function () {
+                requestAnimationFrame(function () { card.classList.add('revealed'); });
+              });
+            }, index * 60);
+          } else {
+            card.classList.remove('revealed');
+            setTimeout(function () { card.style.display = 'none'; }, 400);
+          }
+        });
+      };
+      btn.addEventListener('click', btn._filterHandler);
+    });
+
+    // Re-attach skill bar animation observer
+    var skillObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var bars = entry.target.querySelectorAll('.skill-bar div');
+          bars.forEach(function (bar, i) {
+            var w = bar.style.width;
+            bar.style.width = '0';
+            setTimeout(function () { bar.style.width = w; }, 150 + i * 80);
+          });
+          skillObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('.skill-category').forEach(function (el) {
+      skillObserver.observe(el);
+    });
+  }
+
   // Run on DOM ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', load);
+    document.addEventListener('DOMContentLoaded', function () { load(); reInitReveal(); });
   } else {
     load();
+    reInitReveal();
   }
 
 })();
