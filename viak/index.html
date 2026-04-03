@@ -61,6 +61,12 @@
           <span class="nav-icon">📧</span><span class="nav-label">Contact</span>
         </a>
         <hr class="sidebar-divider">
+        <a href="#" class="nav-item" data-section="analytics">
+          <span class="nav-icon">📊</span><span class="nav-label">Analytics</span>
+        </a>
+        <a href="#" class="nav-item" data-section="cache">
+          <span class="nav-icon">🧹</span><span class="nav-label">Cache</span>
+        </a>
         <a href="#" class="nav-item" data-section="data">
           <span class="nav-icon">💾</span><span class="nav-label">Données</span>
         </a>
@@ -211,6 +217,93 @@
               <input type="text" id="footerDescription" placeholder="Développeur passionné...">
             </div>
             <button class="btn-save" onclick="AdminDashboard.saveContact()">Sauvegarder</button>
+          </div>
+        </section>
+
+        <!-- ANALYTICS SECTION -->
+        <section class="panel" id="panel-analytics" style="display:none;">
+          <div class="panel-header"><h2>Statistiques du Portfolio</h2></div>
+          <div class="panel-body">
+            <!-- Summary cards -->
+            <div class="analytics-summary" id="analyticsSummary"></div>
+            <!-- Chart: views over time -->
+            <div class="analytics-chart-card">
+              <h3>📈 Vues par jour (30 derniers jours)</h3>
+              <canvas id="chartViews" height="220"></canvas>
+            </div>
+            <div class="analytics-grid">
+              <!-- Devices -->
+              <div class="analytics-chart-card">
+                <h3>📱 Appareils</h3>
+                <canvas id="chartDevices" height="200"></canvas>
+              </div>
+              <!-- Browsers -->
+              <div class="analytics-chart-card">
+                <h3>🌐 Navigateurs</h3>
+                <canvas id="chartBrowsers" height="200"></canvas>
+              </div>
+              <!-- Referrers -->
+              <div class="analytics-chart-card">
+                <h3>🔗 Sources de trafic</h3>
+                <div id="referrersList" class="analytics-list"></div>
+              </div>
+              <!-- Popular sections -->
+              <div class="analytics-chart-card">
+                <h3>🎯 Sections populaires</h3>
+                <div id="sectionsList" class="analytics-list"></div>
+              </div>
+              <!-- Traffic by hour -->
+              <div class="analytics-chart-card">
+                <h3>🕐 Trafic par heure</h3>
+                <canvas id="chartHours" height="200"></canvas>
+              </div>
+              <!-- Engagement -->
+              <div class="analytics-chart-card">
+                <h3>⚡ Engagement</h3>
+                <div id="engagementStats" class="analytics-list"></div>
+              </div>
+            </div>
+            <div class="analytics-actions">
+              <button class="btn-export" onclick="AdminDashboard.exportAnalytics()">📥 Exporter Analytics CSV</button>
+              <button class="btn-danger" onclick="AdminDashboard.clearAnalytics()">🗑️ Réinitialiser Analytics</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- CACHE SECTION -->
+        <section class="panel" id="panel-cache" style="display:none;">
+          <div class="panel-header"><h2>Gestion du Cache</h2></div>
+          <div class="panel-body">
+            <div class="cache-info" id="cacheInfo"></div>
+            <div class="data-actions">
+              <div class="data-card">
+                <h3>🔄 LocalStorage</h3>
+                <p>Données synchronisées pour le site public</p>
+                <div class="cache-size" id="lsSize">-</div>
+                <button class="btn-sync" onclick="AdminDashboard.clearLocalStorage()">Vider localStorage</button>
+              </div>
+              <div class="data-card">
+                <h3>🗄️ IndexedDB</h3>
+                <p>Base de données SQLite persistée</p>
+                <div class="cache-size" id="idbSize">-</div>
+                <button class="btn-sync" onclick="AdminDashboard.clearIndexedDB()">Vider IndexedDB</button>
+              </div>
+              <div class="data-card">
+                <h3>🍪 Session</h3>
+                <p>Session admin et données temporaires</p>
+                <div class="cache-size" id="ssSize">-</div>
+                <button class="btn-sync" onclick="AdminDashboard.clearSession()">Vider sessionStorage</button>
+              </div>
+              <div class="data-card danger">
+                <h3>💣 Tout vider</h3>
+                <p>Efface TOUTES les données locales (DB, cache, session)</p>
+                <button class="btn-danger" onclick="AdminDashboard.clearAllCaches()">Purge complète</button>
+              </div>
+            </div>
+            <div class="cache-detail">
+              <h3>Détails du stockage</h3>
+              <pre id="cacheDetail"></pre>
+            </div>
           </div>
         </section>
 

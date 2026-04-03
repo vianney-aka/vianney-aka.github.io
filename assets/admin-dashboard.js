@@ -130,7 +130,7 @@ const AdminDashboard = (function () {
     var activeNav = document.querySelector('.nav-item[data-section="' + section + '"]');
     if (activeNav) activeNav.classList.add('active');
 
-    var titles = { hero: 'Section Hero', projects: 'Projets', skills: 'Compétences', experience: 'Expérience', education: 'Formation', certifications: 'Certifications', contact: 'Contact', data: 'Gestion des Données' };
+    var titles = { hero: 'Section Hero', projects: 'Projets', skills: 'Compétences', experience: 'Expérience', education: 'Formation', certifications: 'Certifications', contact: 'Contact', analytics: 'Analytics', cache: 'Gestion du Cache', data: 'Gestion des Données' };
     document.getElementById('sectionTitle').textContent = titles[section] || section;
 
     document.querySelectorAll('.panel').forEach(function (p) { p.style.display = 'none'; });
@@ -152,6 +152,8 @@ const AdminDashboard = (function () {
         case 'education': loadEducation(); break;
         case 'certifications': loadCertifications(); break;
         case 'contact': loadContact(); break;
+        case 'analytics': loadAnalytics(); break;
+        case 'cache': loadCacheInfo(); break;
         case 'data': loadDataInfo(); break;
       }
     } catch (err) {
@@ -773,6 +775,432 @@ const AdminDashboard = (function () {
   }
 
   // ===================================
+  // ANALYTICS
+  // ===================================
+  var ANALYTICS_KEY = 'portfolio_analytics';
+
+  function getAnalyticsData() {
+    try {
+      var raw = localStorage.getItem(ANALYTICS_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) { return null; }
+  }
+
+  function loadAnalytics() {
+    var data = getAnalyticsData();
+    if (!data || !data.days) {
+      document.getElementById('analyticsSummary').innerHTML =
+        '<div class="stat-card" style="grid-column:1/-1;text-align:center;padding:3rem;">' +
+        '<div class="stat-icon">📊</div>' +
+        '<p style="color:var(--admin-text2);margin-top:0.5rem;">Aucune donnée analytics. Visitez le site public pour commencer le suivi.</p></div>';
+      return;
+    }
+    renderSummaryCards(data);
+    renderViewsChart(data);
+    renderDevicesChart(data);
+    renderBrowsersChart(data);
+    renderReferrers(data);
+    renderSections(data);
+    renderHoursChart(data);
+    renderEngagement(data);
+  }
+
+  function getLast30Days() {
+    var days = [];
+    var now = new Date();
+    for (var i = 29; i >= 0; i--) {
+      var d = new Date(now);
+      d.setDate(d.getDate() - i);
+      days.push(d.toISOString().slice(0, 10));
+    }
+    return days;
+  }
+
+  function renderSummaryCards(data) {
+    var days = Object.keys(data.days).sort();
+    var todayKey = new Date().toISOString().slice(0, 10);
+    var yesterdayKey = (function () { var d = new Date(); d.setDate(d.getDate() - 1); return d.toISOString().slice(0, 10); })();
+
+    var totalViews = 0, totalVisitors = 0, totalSessions = 0;
+    days.forEach(function (d) {
+      var day = data.days[d];
+      totalViews += day.views || 0;
+      totalVisitors += (day.visitors ? day.visitors.length : 0);
+      totalSessions += (day.sessions ? day.sessions.length : 0);
+    });
+
+    var todayData = data.days[todayKey] || { views: 0, visitors: [] };
+    var yesterdayData = data.days[yesterdayKey] || { views: 0, visitors: [] };
+    var viewsTrend = todayData.views - (yesterdayData.views || 0);
+    var trendClass = viewsTrend > 0 ? 'up' : (viewsTrend < 0 ? 'down' : 'neutral');
+    var trendText = viewsTrend > 0 ? ('▲ +' + viewsTrend) : (viewsTrend < 0 ? ('▼ ' + viewsTrend) : '— stable');
+
+    // Avg time on page
+    var totalTime = 0, timeDays = 0;
+    days.forEach(function (d) {
+      if (data.days[d].totalTime) { totalTime += data.days[d].totalTime; timeDays++; }
+    });
+    var avgTime = timeDays > 0 ? Math.round(totalTime / totalSessions) : 0;
+    var avgTimeStr = avgTime >= 60 ? Math.floor(avgTime / 60) + 'min ' + (avgTime % 60) + 's' : avgTime + 's';
+
+    document.getElementById('analyticsSummary').innerHTML =
+      '<div class="stat-card"><div class="stat-icon">👁</div><div class="stat-value">' + totalViews + '</div><div class="stat-label">Vues totales</div><div class="stat-trend ' + trendClass + '">' + trendText + ' aujourd\'hui</div></div>' +
+      '<div class="stat-card"><div class="stat-icon">👤</div><div class="stat-value">' + totalVisitors + '</div><div class="stat-label">Visiteurs</div><div class="stat-trend neutral">' + (todayData.visitors ? todayData.visitors.length : 0) + ' aujourd\'hui</div></div>' +
+      '<div class="stat-card"><div class="stat-icon">⏱</div><div class="stat-value">' + avgTimeStr + '</div><div class="stat-label">Temps moyen</div><div class="stat-trend neutral">par session</div></div>' +
+      '<div class="stat-card"><div class="stat-icon">📅</div><div class="stat-value">' + days.length + '</div><div class="stat-label">Jours suivis</div><div class="stat-trend neutral">' + todayData.views + ' vues aujourd\'hui</div></div>';
+  }
+
+  // roundRect polyfill for older browsers
+  if (typeof CanvasRenderingContext2D !== 'undefined' && !CanvasRenderingContext2D.prototype.roundRect) {
+    CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, radii) {
+      var r = (Array.isArray(radii) ? radii[0] : radii) || 0;
+      this.moveTo(x + r, y);
+      this.lineTo(x + w - r, y);
+      this.quadraticCurveTo(x + w, y, x + w, y + r);
+      this.lineTo(x + w, y + h);
+      this.lineTo(x, y + h);
+      this.lineTo(x, y + r);
+      this.quadraticCurveTo(x, y, x + r, y);
+      this.closePath();
+    };
+  }
+
+  // Mini canvas chart library (no external dependency)
+  function drawBarChart(canvasId, labels, values, color) {
+    var canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+    var rect = canvas.parentElement.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = canvas.height * dpr;
+    canvas.style.width = rect.width + 'px';
+    ctx.scale(dpr, dpr);
+    var W = rect.width, H = canvas.height / dpr;
+    ctx.clearRect(0, 0, W, H);
+    if (!values.length) return;
+
+    var max = Math.max.apply(null, values) || 1;
+    var barW = Math.max(2, (W - 60) / values.length - 2);
+    var padding = { top: 10, bottom: 30, left: 40, right: 10 };
+    var chartW = W - padding.left - padding.right;
+    var chartH = H - padding.top - padding.bottom;
+    barW = Math.min(barW, chartW / values.length - 2);
+
+    // Grid lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 1;
+    for (var g = 0; g <= 4; g++) {
+      var gy = padding.top + (chartH / 4) * g;
+      ctx.beginPath(); ctx.moveTo(padding.left, gy); ctx.lineTo(W - padding.right, gy); ctx.stroke();
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.font = '10px Inter, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(Math.round(max - (max / 4) * g), padding.left - 6, gy + 4);
+    }
+
+    // Bars
+    values.forEach(function (v, i) {
+      var x = padding.left + (chartW / values.length) * i + 1;
+      var barH = (v / max) * chartH;
+      var y = padding.top + chartH - barH;
+
+      var grad = ctx.createLinearGradient(x, y, x, y + barH);
+      grad.addColorStop(0, color || '#2d7bff');
+      grad.addColorStop(1, color ? color + '80' : '#2d7bff60');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.roundRect(x, y, Math.max(barW, 2), barH, [3, 3, 0, 0]);
+      ctx.fill();
+    });
+
+    // X labels (show every Nth)
+    var step = Math.ceil(labels.length / 8);
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.font = '9px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    labels.forEach(function (l, i) {
+      if (i % step === 0 || i === labels.length - 1) {
+        var x = padding.left + (chartW / values.length) * i + barW / 2;
+        ctx.fillText(l, x, H - 6);
+      }
+    });
+  }
+
+  function drawDonutChart(canvasId, labelsArr, valuesArr, colorsArr) {
+    var canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+    var rect = canvas.parentElement.getBoundingClientRect();
+    var size = Math.min(rect.width, 200);
+    canvas.width = rect.width * dpr;
+    canvas.height = size * dpr;
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = size + 'px';
+    ctx.scale(dpr, dpr);
+    var W = rect.width, H = size;
+    ctx.clearRect(0, 0, W, H);
+
+    var total = valuesArr.reduce(function (a, b) { return a + b; }, 0);
+    if (!total) return;
+    var cx = W / 3, cy = H / 2, r = Math.min(cx, cy) - 10;
+    var startAngle = -Math.PI / 2;
+
+    valuesArr.forEach(function (v, i) {
+      var sliceAngle = (v / total) * Math.PI * 2;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, r, startAngle, startAngle + sliceAngle);
+      ctx.closePath();
+      ctx.fillStyle = colorsArr[i % colorsArr.length];
+      ctx.fill();
+      startAngle += sliceAngle;
+    });
+
+    // Inner circle for donut
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 0.55, 0, Math.PI * 2);
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--admin-surface2').trim() || '#1a2332';
+    ctx.fill();
+
+    // Center text
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 18px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(total, cx, cy + 6);
+
+    // Legend
+    ctx.textAlign = 'left';
+    ctx.font = '11px Inter, sans-serif';
+    var legendX = W * 0.62, legendY = 20;
+    labelsArr.forEach(function (l, i) {
+      ctx.fillStyle = colorsArr[i % colorsArr.length];
+      ctx.fillRect(legendX, legendY + i * 22, 12, 12);
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.fillText(l + ' (' + valuesArr[i] + ')', legendX + 18, legendY + i * 22 + 10);
+    });
+  }
+
+  function renderViewsChart(data) {
+    var last30 = getLast30Days();
+    var labels = last30.map(function (d) { return d.slice(5); }); // MM-DD
+    var values = last30.map(function (d) {
+      return data.days[d] ? (data.days[d].views || 0) : 0;
+    });
+    drawBarChart('chartViews', labels, values, '#2d7bff');
+  }
+
+  function renderDevicesChart(data) {
+    var d = data.devices || {};
+    drawDonutChart('chartDevices',
+      ['Desktop', 'Mobile', 'Tablet'],
+      [d.desktop || 0, d.mobile || 0, d.tablet || 0],
+      ['#2d7bff', '#00c853', '#ff6b35']
+    );
+  }
+
+  function renderBrowsersChart(data) {
+    var b = data.browsers || {};
+    var sorted = Object.keys(b).sort(function (a, c) { return b[c] - b[a]; }).slice(0, 5);
+    var colors = ['#2d7bff', '#00c853', '#ff6b35', '#a855f7', '#fbbf24'];
+    drawDonutChart('chartBrowsers',
+      sorted,
+      sorted.map(function (k) { return b[k]; }),
+      colors
+    );
+  }
+
+  function renderReferrers(data) {
+    var refs = data.referrers || {};
+    var sorted = Object.keys(refs).sort(function (a, b) { return refs[b] - refs[a]; });
+    var max = sorted.length ? refs[sorted[0]] : 1;
+    var icons = { direct: '🔗', google: '🔍', linkedin: '💼', facebook: '👥', twitter: '🐦', github: '🐙', bing: '🔎', interne: '🏠' };
+    var html = sorted.map(function (r) {
+      var pct = Math.round((refs[r] / max) * 100);
+      var icon = icons[r] || '🌐';
+      return '<div class="analytics-row"><span class="row-label">' + icon + ' ' + esc(r) + '</span><div class="row-bar"><div class="row-bar-fill" style="width:' + pct + '%"></div></div><span class="row-value">' + refs[r] + '</span></div>';
+    }).join('');
+    document.getElementById('referrersList').innerHTML = html || '<p style="color:var(--admin-text2);font-size:0.8rem;">Aucune donnée</p>';
+  }
+
+  function renderSections(data) {
+    var pages = data.pages || {};
+    var sorted = Object.keys(pages).sort(function (a, b) { return pages[b] - pages[a]; });
+    var max = sorted.length ? pages[sorted[0]] : 1;
+    var names = { '#home': '🏠 Accueil', '#projects': '📁 Projets', '#skills': '⚡ Compétences', '#experience': '💼 Expérience', '#formation': '🎓 Formation', '#contact': '📧 Contact' };
+    var html = sorted.map(function (s) {
+      var pct = Math.round((pages[s] / max) * 100);
+      return '<div class="analytics-row"><span class="row-label">' + (names[s] || s) + '</span><div class="row-bar"><div class="row-bar-fill" style="width:' + pct + '%"></div></div><span class="row-value">' + pages[s] + '</span></div>';
+    }).join('');
+    document.getElementById('sectionsList').innerHTML = html || '<p style="color:var(--admin-text2);font-size:0.8rem;">Aucune donnée</p>';
+  }
+
+  function renderHoursChart(data) {
+    var hours = data.hours || {};
+    var labels = [], values = [];
+    for (var h = 0; h < 24; h++) {
+      labels.push(h + 'h');
+      values.push(hours[String(h)] || 0);
+    }
+    drawBarChart('chartHours', labels, values, '#00c853');
+  }
+
+  function renderEngagement(data) {
+    var days = Object.keys(data.days);
+    var totalBounce = 0, totalEngaged = 0, totalSessions = 0;
+    days.forEach(function (d) {
+      var day = data.days[d];
+      totalBounce += day.bounce || 0;
+      totalEngaged += day.engaged || 0;
+      totalSessions += (day.sessions ? day.sessions.length : 0);
+    });
+    var bounceRate = totalSessions > 0 ? Math.round((totalBounce / totalSessions) * 100) : 0;
+    var topDevice = 'desktop';
+    var devMax = 0;
+    if (data.devices) {
+      Object.keys(data.devices).forEach(function (k) {
+        if (data.devices[k] > devMax) { devMax = data.devices[k]; topDevice = k; }
+      });
+    }
+    var deviceNames = { desktop: '🖥 Desktop', mobile: '📱 Mobile', tablet: '📟 Tablet' };
+    document.getElementById('engagementStats').innerHTML =
+      '<div class="analytics-row"><span class="row-label">Taux de rebond</span><span class="row-value">' + bounceRate + '%</span></div>' +
+      '<div class="analytics-row"><span class="row-label">Sessions totales</span><span class="row-value">' + totalSessions + '</span></div>' +
+      '<div class="analytics-row"><span class="row-label">Sessions engagées</span><span class="row-value">' + totalEngaged + '</span></div>' +
+      '<div class="analytics-row"><span class="row-label">Appareil principal</span><span class="row-value">' + (deviceNames[topDevice] || topDevice) + '</span></div>' +
+      '<div class="analytics-row"><span class="row-label">Jours actifs</span><span class="row-value">' + days.length + '</span></div>';
+  }
+
+  function exportAnalytics() {
+    var data = getAnalyticsData();
+    if (!data) { toast('Aucune donnée à exporter', 'error'); return; }
+    var days = Object.keys(data.days).sort();
+    var csv = 'Date,Vues,Visiteurs,Sessions,Bounce,TempsTotal\n';
+    days.forEach(function (d) {
+      var day = data.days[d];
+      csv += d + ',' + (day.views || 0) + ',' + (day.visitors ? day.visitors.length : 0) + ',' + (day.sessions ? day.sessions.length : 0) + ',' + (day.bounce || 0) + ',' + (day.totalTime || 0) + '\n';
+    });
+    var blob = new Blob([csv], { type: 'text/csv' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'analytics_' + new Date().toISOString().slice(0, 10) + '.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('Analytics exportées !', 'success');
+  }
+
+  function clearAnalytics() {
+    if (!confirm('Supprimer toutes les données analytics ?')) return;
+    localStorage.removeItem(ANALYTICS_KEY);
+    toast('Analytics réinitialisées', 'info');
+    loadAnalytics();
+  }
+
+  // ===================================
+  // CACHE MANAGEMENT
+  // ===================================
+  function formatBytes(bytes) {
+    if (bytes === 0) return '0 B';
+    var k = 1024;
+    var sizes = ['B', 'KB', 'MB', 'GB'];
+    var i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  function getStorageSize(storage) {
+    var total = 0;
+    try {
+      for (var i = 0; i < storage.length; i++) {
+        var key = storage.key(i);
+        total += (key.length + (storage.getItem(key) || '').length) * 2; // UTF-16
+      }
+    } catch (e) {}
+    return total;
+  }
+
+  function loadCacheInfo() {
+    var lsSize = getStorageSize(localStorage);
+    var ssSize = getStorageSize(sessionStorage);
+
+    document.getElementById('lsSize').textContent = formatBytes(lsSize);
+    document.getElementById('ssSize').textContent = formatBytes(ssSize);
+
+    // Estimate IndexedDB size
+    if (navigator.storage && navigator.storage.estimate) {
+      navigator.storage.estimate().then(function (est) {
+        document.getElementById('idbSize').textContent = formatBytes(est.usage || 0) + ' / ' + formatBytes(est.quota || 0);
+      }).catch(function () {
+        document.getElementById('idbSize').textContent = 'N/A';
+      });
+    } else {
+      document.getElementById('idbSize').textContent = 'N/A';
+    }
+
+    // Detail breakdown
+    var details = 'localStorage (' + formatBytes(lsSize) + '):\n';
+    for (var i = 0; i < localStorage.length; i++) {
+      var key = localStorage.key(i);
+      var val = localStorage.getItem(key) || '';
+      details += '  ' + key + ': ' + formatBytes(val.length * 2) + '\n';
+    }
+    details += '\nsessionStorage (' + formatBytes(ssSize) + '):\n';
+    for (var j = 0; j < sessionStorage.length; j++) {
+      var skey = sessionStorage.key(j);
+      var sval = sessionStorage.getItem(skey) || '';
+      details += '  ' + skey + ': ' + formatBytes(sval.length * 2) + '\n';
+    }
+    document.getElementById('cacheDetail').textContent = details;
+  }
+
+  function clearLocalStorage() {
+    if (!confirm('Vider le localStorage ? Le site public perdra ses données dynamiques.')) return;
+    var analyticsBackup = localStorage.getItem(ANALYTICS_KEY);
+    localStorage.clear();
+    // Keep analytics
+    if (analyticsBackup) localStorage.setItem(ANALYTICS_KEY, analyticsBackup);
+    toast('localStorage vidé (analytics conservées)', 'success');
+    loadCacheInfo();
+  }
+
+  function clearIndexedDB() {
+    if (!confirm('Vider IndexedDB ? La base de données sera recréée au prochain chargement.')) return;
+    var dbName = 'PortfolioDB';
+    var req = indexedDB.deleteDatabase(dbName);
+    req.onsuccess = function () {
+      toast('IndexedDB vidée. Rechargez la page.', 'success');
+      loadCacheInfo();
+    };
+    req.onerror = function () {
+      toast('Erreur suppression IndexedDB', 'error');
+    };
+  }
+
+  function clearSession() {
+    if (!confirm('Vider sessionStorage ? Vous serez déconnecté.')) return;
+    sessionStorage.clear();
+    toast('Session vidée. Redirection...', 'info');
+    setTimeout(function () { location.reload(); }, 1000);
+  }
+
+  function clearAllCaches() {
+    if (!confirm('PURGE COMPLÈTE : localStorage + IndexedDB + session.\nVous perdrez TOUTES les données locales. Continuer ?')) return;
+    localStorage.clear();
+    sessionStorage.clear();
+    var dbName = 'PortfolioDB';
+    var req = indexedDB.deleteDatabase(dbName);
+    req.onsuccess = function () {
+      toast('Purge complète. Rechargement...', 'success');
+      setTimeout(function () { location.reload(); }, 1000);
+    };
+    req.onerror = function () {
+      toast('Purge partielle (erreur IndexedDB)', 'error');
+      setTimeout(function () { location.reload(); }, 1000);
+    };
+  }
+
+  // ===================================
   // IMAGE UPLOAD + COMPRESSION
   // ===================================
   function compressImage(file, maxW, maxH, quality) {
@@ -868,7 +1296,9 @@ const AdminDashboard = (function () {
     loadEducation: loadEducation, saveEducation: saveEducation, deleteEducation: deleteEducation, addEducation: addEducation,
     loadCertifications: loadCertifications, saveCertification: saveCertification, deleteCertification: deleteCertification, addCertification: addCertification,
     saveContact: saveContact,
-    exportData: exportData, resetData: resetData, syncData: syncData
+    exportData: exportData, resetData: resetData, syncData: syncData,
+    exportAnalytics: exportAnalytics, clearAnalytics: clearAnalytics,
+    clearLocalStorage: clearLocalStorage, clearIndexedDB: clearIndexedDB, clearSession: clearSession, clearAllCaches: clearAllCaches
   };
 
 })();
