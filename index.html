@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Vianney AKA - Développeur Full Stack spécialisé en e-learning et projets à impact social. Expert Moodle, Laravel, Django avec 5+ ans d'expérience auprès de l'UNESCO et TotalEnergies.">
+    <meta name="description" content="Vianney AKA - Développeur Full Stack & Administrateur LMS spécialisé en e-learning et projets à impact social. Expert Moodle, Laravel, Django avec 5+ ans d'expérience auprès de l'UNESCO, TechnoServe et TotalEnergies.">
     <meta name="keywords" content="développeur full stack, e-learning, Moodle, Laravel, Django, WordPress, Angular, développeur Côte d'Ivoire, UNESCO, TotalEnergies, impact social, formation en ligne, LMS, plateforme e-learning, Abidjan, développeur web, PHP, Python, JavaScript">
     <meta name="author" content="Aka Kouadio Bonnaventure Vianney">
     <meta name="robots" content="index, follow">
@@ -23,8 +23,8 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://vianney-aka.github.io/">
     <meta property="og:site_name" content="Vianney AKA Portfolio">
-    <meta property="og:title" content="Vianney AKA - Développeur Full Stack & Architecte E-Learning">
-    <meta property="og:description" content="Expert en plateformes e-learning et solutions digitales à impact social. 5+ ans d'expérience avec UNESCO, TotalEnergies. Spécialiste Moodle, Laravel, Django.">
+    <meta property="og:title" content="Vianney AKA - Développeur Full Stack & Administrateur LMS | Chef de Projet Digital">
+    <meta property="og:description" content="Expert en plateformes e-learning et solutions digitales à impact social. 5+ ans d'expérience avec UNESCO, TechnoServe, TotalEnergies. Spécialiste Moodle, Laravel, Django.">
     <meta property="og:image" content="https://vianney-aka.github.io/assets/og-image.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -35,8 +35,8 @@
     <meta name="twitter:site" content="@vianney_aka">
     <meta name="twitter:creator" content="@vianney_aka">
     <meta name="twitter:url" content="https://vianney-aka.github.io/">
-    <meta name="twitter:title" content="Vianney AKA - Développeur Full Stack & Architecte E-Learning">
-    <meta name="twitter:description" content="Expert en plateformes e-learning et solutions digitales à impact social. 5+ ans d'expérience.">
+    <meta name="twitter:title" content="Vianney AKA - Développeur Full Stack & Administrateur LMS | Chef de Projet Digital">
+    <meta name="twitter:description" content="Expert en plateformes e-learning et solutions digitales à impact social. 5+ ans d'expérience avec UNESCO, TechnoServe, TotalEnergies.">
     <meta name="twitter:image" content="https://vianney-aka.github.io/assets/og-image.jpg">
     
     <!-- Canonical URL -->
@@ -56,8 +56,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="assets/styles.css">
+    <link rel="stylesheet" href="assets/effects.css">
     
-    <title>Vianney AKA - Développeur Full Stack | Architecte E-Learning | Abidjan, Côte d'Ivoire</title>
+    <title>Vianney AKA - Développeur Full Stack | Administrateur LMS & Chef de Projet Digital | Abidjan, Côte d'Ivoire</title>
     
     <!-- Schema.org Structured Data -->
     <script type="application/ld+json">
@@ -68,11 +69,17 @@
       "alternateName": "Vianney AKA",
       "url": "https://vianney-aka.github.io",
       "image": "https://vianney-aka.github.io/assets/profile.jpg",
-      "jobTitle": "Développeur Full Stack & Architecte E-Learning",
-      "worksFor": {
-        "@type": "Organization",
-        "name": "Impact'Lab UNESCO - CILIS"
-      },
+      "jobTitle": "Développeur Full Stack & Administrateur LMS | Chef de Projet Digital",
+      "worksFor": [
+        {
+          "@type": "Organization",
+          "name": "Nounou Minute CI"
+        },
+        {
+          "@type": "Organization",
+          "name": "Impact'Lab UNESCO - CILIS"
+        }
+      ],
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Abidjan",
@@ -94,23 +101,38 @@
         "Django",
         "WordPress",
         "Angular",
+        "React Native",
         "Full Stack Development",
         "LMS Development",
         "PHP",
         "Python",
-        "JavaScript"
+        "JavaScript",
+        "H5P",
+        "SCORM",
+        "TalentLMS",
+        "Rise360",
+        "PostgreSQL"
       ],
-      "alumniOf": {
-        "@type": "EducationalOrganization",
-        "name": "Formation Développement Web"
-      }
+      "alumniOf": [
+        {
+          "@type": "EducationalOrganization",
+          "name": "IFSM Cocody"
+        },
+        {
+          "@type": "EducationalOrganization",
+          "name": "PIGIER Côte d'Ivoire"
+        }
+      ]
     }
     </script>
 </head>
 <body>
     <!-- Loader -->
     <div class="loader" id="loader">
-        <div class="spinner"></div>
+        <div class="loader-content">
+            <div class="spinner"></div>
+            <p class="loader-text">Chargement...</p>
+        </div>
     </div>
 
     <!-- Navigation -->
@@ -127,6 +149,7 @@
                 <li><a href="#projects" class="nav-link">Projets</a></li>
                 <li><a href="#skills" class="nav-link">Compétences</a></li>
                 <li><a href="#experience" class="nav-link">Parcours</a></li>
+                <li><a href="#formation" class="nav-link">Formation</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
                 <li><button class="theme-toggle" id="themeToggle" aria-label="Theme">🌙</button></li>
             </ul>
@@ -135,23 +158,24 @@
 
     <!-- Hero -->
     <section class="hero" id="home">
+        <canvas id="particleCanvas" class="particle-canvas"></canvas>
         <div class="container hero-container">
             <div class="hero-content">
-                <p class="hero-greeting">Bonjour, je suis</p>
-                <h1 class="hero-title">Vianney AKA</h1>
-                <h2 class="hero-subtitle">Développeur Full Stack | Architecte de Solutions E-Learning</h2>
-                <p class="hero-description">
-                    Je conçois des plateformes digitales innovantes qui transforment l'éducation et créent un impact social mesurable. 
-                    Spécialisé en e-learning avec 5+ ans d'expérience.
+                <p class="hero-greeting" data-editable="hero-greeting">Bonjour, je suis</p>
+                <h1 class="hero-title" data-editable="hero-title">Vianney AKA</h1>
+                <h2 class="hero-subtitle" data-editable="hero-subtitle">Développeur Full Stack | Administrateur LMS & Chef de Projet Digital</h2>
+                <p class="hero-description" data-editable="hero-description">
+                    Développeur Full Stack et Responsable IT avec plus de 5 ans d'expérience dans la conception de plateformes e-learning, 
+                    la gestion de projets digitaux et le développement d'applications web et mobile.
                 </p>
                 <div class="hero-cta">
                     <a href="#projects" class="btn btn-primary">Voir mes projets →</a>
                     <a href="#contact" class="btn btn-secondary">Me contacter</a>
                 </div>
                 <div class="hero-stats">
-                    <div class="stat"><span>5+</span>Ans d'expérience</div>
-                    <div class="stat"><span>300+</span>Jeunes formés</div>
-                    <div class="stat"><span>200+</span>Utilisateurs actifs</div>
+                    <div class="stat"><span data-counter="5">0</span>Ans d'expérience</div>
+                    <div class="stat"><span data-counter="300">0</span>Jeunes formés</div>
+                    <div class="stat"><span data-counter="200">0</span>Utilisateurs actifs</div>
                 </div>
             </div>
             <div class="hero-image">
@@ -163,7 +187,7 @@
     <!-- Projects -->
     <section class="projects" id="projects">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header" data-reveal>
                 <span class="label">Portfolio</span>
                 <h2>Projets Phares</h2>
                 <p>Découvrez mes réalisations qui allient excellence technique et impact social</p>
@@ -200,8 +224,8 @@
                         <img src="assets/project-prosper.jpg" alt="Prosper Cashew" loading="lazy">
                     </div>
                     <div class="project-content">
-                        <h3>Prosper Cashew LMS<span class="badge">TotalEnergies</span></h3>
-                        <p>LMS sur-mesure pour TotalEnergies Foundation avec vidéos interactives.</p>
+                        <h3>Prosper Cashew LMS<span class="badge">TechnoServe</span></h3>
+                        <p>LMS sur-mesure pour Prosper Cashew / TechnoServe avec vidéos, animations et quiz interactifs.</p>
                         <div class="metrics">
                             <div><strong>40%</strong> ↑ Engagement</div>
                             <div><strong>15</strong> Formés</div>
@@ -226,6 +250,23 @@
                     </div>
                 </article>
 
+                <article class="project-card" data-category="laravel">
+                    <div class="project-image">
+                        <img src="assets/project-nounou.jpg" alt="Nounou Minute CI" loading="lazy">
+                    </div>
+                    <div class="project-content">
+                        <h3>Nounou Minute CI<span class="badge">Startup</span></h3>
+                        <p>Application mobile de mise en relation pour services de garde d'enfants avec géolocalisation et paiement mobile.</p>
+                        <div class="metrics">
+                            <div><strong>MVP</strong> en 3 mois</div>
+                            <div><strong>2</strong> Stores</div>
+                        </div>
+                        <div class="tags">
+                            <span>React Native</span><span>Laravel</span><span>Google Maps</span>
+                        </div>
+                    </div>
+                </article>
+
                 <article class="project-card" data-category="python">
                     <div class="project-image">
                         <img src="assets/project-drone.jpg" alt="Drone 5G" loading="lazy">
@@ -238,6 +279,19 @@
                         </div>
                     </div>
                 </article>
+
+                <article class="project-card" data-category="laravel">
+                    <div class="project-image">
+                        <img src="assets/project-wordpress.jpg" alt="Sites WordPress" loading="lazy">
+                    </div>
+                    <div class="project-content">
+                        <h3>Sites WordPress & Laravel</h3>
+                        <p>Conception de multiples sites professionnels : afcsm.com, acm-institute.com, dyvagroup.com</p>
+                        <div class="tags">
+                            <span>WordPress</span><span>Laravel</span><span>PHP</span>
+                        </div>
+                    </div>
+                </article>
             </div>
         </div>
     </section>
@@ -245,7 +299,7 @@
     <!-- Skills -->
     <section class="skills" id="skills">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header" data-reveal>
                 <span class="label">Expertise</span>
                 <h2>Stack Technique</h2>
             </div>
@@ -266,7 +320,7 @@
                         <div class="skill-bar"><div style="width: 80%"></div></div>
                     </div>
                     <div class="skill-item">
-                        <span>🗄️ MySQL</span>
+                        <span>🗄️ MySQL / PostgreSQL</span>
                         <div class="skill-bar"><div style="width: 90%"></div></div>
                     </div>
                 </div>
@@ -294,17 +348,29 @@
                 <div class="skill-category">
                     <h3>📚 CMS & LMS</h3>
                     <div class="skill-item">
-                        <span>🎓 Moodle</span>
+                        <span>🎓 Moodle Expert</span>
                         <div class="skill-bar"><div style="width: 95%"></div></div>
                     </div>
                     <div class="skill-item">
                         <span>📝 WordPress</span>
                         <div class="skill-bar"><div style="width: 85%"></div></div>
                     </div>
+                    <div class="skill-item">
+                        <span>🧩 H5P / SCORM</span>
+                        <div class="skill-bar"><div style="width: 85%"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <span>📊 TalentLMS</span>
+                        <div class="skill-bar"><div style="width: 80%"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <span>🎯 Rise360</span>
+                        <div class="skill-bar"><div style="width: 80%"></div></div>
+                    </div>
                 </div>
 
                 <div class="skill-category">
-                    <h3>🛠️ DevOps</h3>
+                    <h3>🛠️ DevOps & Outils</h3>
                     <div class="skill-item">
                         <span>🐙 Git / GitHub</span>
                         <div class="skill-bar"><div style="width: 90%"></div></div>
@@ -313,16 +379,20 @@
                         <span>🐧 Linux</span>
                         <div class="skill-bar"><div style="width: 85%"></div></div>
                     </div>
+                    <div class="skill-item">
+                        <span>📋 Jira / Trello</span>
+                        <div class="skill-bar"><div style="width: 80%"></div></div>
+                    </div>
                 </div>
             </div>
 
             <div class="certifications">
                 <h3>Certifications & Impact</h3>
                 <div class="cert-badges">
-                    <span>✓ Microsoft Excel</span>
-                    <span>✓ VIA Character</span>
-                    <span>👨‍🎓 300+ formés</span>
-                    <span>🌍 UNESCO & TotalEnergies</span>
+                    <span>✓ Microsoft Excel 2016</span>
+                    <span>✓ Bénévole Formateur Programme VIA 2023 & 2024</span>
+                    <span>👨‍🎓 300+ jeunes formés</span>
+                    <span>🌍 UNESCO, TechnoServe & TotalEnergies</span>
                 </div>
             </div>
         </div>
@@ -331,30 +401,46 @@
     <!-- Experience -->
     <section class="experience" id="experience">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header" data-reveal>
                 <span class="label">Carrière</span>
                 <h2>Parcours Professionnel</h2>
             </div>
 
             <div class="timeline">
                 <div class="timeline-item">
-                    <div class="timeline-date">2023 - Présent</div>
+                    <div class="timeline-date">Sept. 2025 - Présent</div>
                     <div class="timeline-content">
-                        <h3>Responsable IT</h3>
-                        <h4>Impact'Lab UNESCO - CILIS</h4>
+                        <h3>Co-fondateur & CTO</h3>
+                        <h4>Nounou Minute CI</h4>
                         <ul>
-                            <li>Déploiement plateforme Moodle (200+ utilisateurs)</li>
-                            <li>Gestion infrastructure IT complète</li>
-                            <li>Formation équipes techniques</li>
+                            <li>MVP fonctionnel en 3 mois (authentification, géolocalisation Google Maps, réservation)</li>
+                            <li>Intégration paiement mobile & messagerie temps réel avec notifications push</li>
+                            <li>Déploiement Google Play Store et App Store</li>
+                            <li>Création de la landing page (nounouminute.pro)</li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="timeline-item">
-                    <div class="timeline-date">2024 - 2025</div>
+                    <div class="timeline-date">Août 2023 - Présent</div>
                     <div class="timeline-content">
-                        <h3>Consultant Digitalisation</h3>
-                        <h4>Prosper Cashew - TotalEnergies Foundation</h4>
+                        <h3>Responsable Informatique & Chef de Projet</h3>
+                        <h4>Impact'Lab UNESCO - CILIS</h4>
+                        <ul>
+                            <li>Déploiement plateforme e-learning Moodle (200+ utilisateurs, 95% satisfaction)</li>
+                            <li>Chef projet Youth Mobile : formation de 120 jeunes en apps mobiles NOCODE</li>
+                            <li>Coordinateur plateforme Moodle projet Génie (GGGI / Primature / KOICA)</li>
+                            <li>Projet TEWA : formation de 30 femmes et intégration plateforme ISAHIT</li>
+                            <li>Refonte complète du site web impactlab-cilis.org</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Sept. 2024 - Juin 2025</div>
+                    <div class="timeline-content">
+                        <h3>Consultant en Digitalisation</h3>
+                        <h4>Prosper Cashew / TechnoServe</h4>
                         <ul>
                             <li>Développement LMS Laravel sur-mesure</li>
                             <li>Formation 15 collaborateurs</li>
@@ -364,27 +450,88 @@
                 </div>
 
                 <div class="timeline-item">
-                    <div class="timeline-date">2022 - 2023</div>
+                    <div class="timeline-date">Nov. 2022 - Août 2023</div>
                     <div class="timeline-content">
-                        <h3>Développeur & Formateur</h3>
-                        <h4>Villa HOH</h4>
+                        <h3>Développeur Web & Formateur WordPress</h3>
+                        <h4>Villa HOH | L'univers de l'intelligence collective</h4>
                         <ul>
-                            <li>Formation 300+ jeunes en développement web</li>
-                            <li>Projets Laravel, Django, WordPress</li>
-                            <li>Mentorat technique</li>
+                            <li>Création de sites internet avec Laravel</li>
+                            <li>Formation de la 3ème cohorte de 60 jeunes (projet Projeunes - ONG IRC)</li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="timeline-item">
-                    <div class="timeline-date">2022</div>
+                    <div class="timeline-date">Juin - Nov. 2022</div>
                     <div class="timeline-content">
                         <h3>Finaliste Hackathon 5G</h3>
-                        <h4>Orange Côte d'Ivoire</h4>
+                        <h4>Orange Côte d'Ivoire - Orange Digital Center</h4>
                         <ul>
-                            <li>Drone patrouilleur intelligent</li>
-                            <li>Raspberry Pi + Computer Vision</li>
+                            <li>Drone patrouilleur intelligent (Raspberry Pi 4, caméra, détection de mouvement)</li>
+                            <li>Application web de gestion des alertes citoyens</li>
+                            <li>Application de bureau pour pilotage du drone à distance</li>
                         </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Fév. - Juin 2022</div>
+                    <div class="timeline-content">
+                        <h3>Chef Projet Web & Formateur WordPress</h3>
+                        <h4>Villa HOH | L'univers de l'intelligence collective</h4>
+                        <ul>
+                            <li>Création de sites web avec Laravel et WordPress</li>
+                            <li>Formation de la 2ème cohorte de 120 jeunes à Abidjan et Korhogo (projet Projeunes - ONG IRC)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Juin 2020 - Fév. 2022</div>
+                    <div class="timeline-content">
+                        <h3>Stage & Assistant Chef Projet Web</h3>
+                        <h4>Villa HOH | L'univers de l'intelligence collective</h4>
+                        <ul>
+                            <li>Création de sites web avec Laravel et déploiement Agora Project</li>
+                            <li>Mise en place plateforme e-learning Moodle</li>
+                            <li>Gestion de bases de données MySQL</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formation -->
+    <section class="formation" id="formation">
+        <div class="container">
+            <div class="section-header" data-reveal>
+                <span class="label">Études</span>
+                <h2>Formation</h2>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">IFSM Cocody</div>
+                    <div class="timeline-content">
+                        <h3>Licence 3 Réseaux Telecom et Génie Logiciel</h3>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Fév. 2017 - Juil. 2019</div>
+                    <div class="timeline-content">
+                        <h3>BTS Informatique - Développeur d'Application</h3>
+                        <h4>PIGIER Côte d'Ivoire</h4>
+                        <p>Licence Professionnelle 1ère et 2ème année - Option Réseaux et Génie Logiciel</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Nov. 2015 - Juil. 2016</div>
+                    <div class="timeline-content">
+                        <h3>Baccalauréat D</h3>
+                        <h4>Institut LKM</h4>
                     </div>
                 </div>
             </div>
@@ -394,7 +541,7 @@
     <!-- Contact -->
     <section class="contact" id="contact">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header" data-reveal>
                 <span class="label">Parlons-en</span>
                 <h2>Me Contacter</h2>
                 <p>Vous avez un projet ? Discutons de comment je peux vous aider</p>
@@ -507,6 +654,7 @@
                     <a href="#projects">Projets</a>
                     <a href="#skills">Compétences</a>
                     <a href="#experience">Parcours</a>
+                    <a href="#formation">Formation</a>
                     <a href="#contact">Contact</a>
                 </div>
                 <div class="footer-contact">
@@ -522,5 +670,7 @@
     </footer>
 
     <script src="assets/script.js"></script>
+    <script src="assets/effects.js"></script>
+    <script src="assets/content-loader.js"></script>
 </body>
 </html>

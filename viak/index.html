@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin - Portfolio Vianney AKA</title>
+  <link rel="icon" type="image/png" href="../assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/admin-dashboard.css">
+</head>
+<body>
+
+  <!-- Login Screen -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <div class="login-icon">🔒</div>
+      <h1>Administration</h1>
+      <p>Portfolio Vianney AKA</p>
+      <form id="loginForm" autocomplete="off">
+        <div class="form-field">
+          <label for="loginPassword">Mot de passe</label>
+          <input type="password" id="loginPassword" placeholder="Entrez le mot de passe" required>
+        </div>
+        <button type="submit" class="btn-login">Connexion</button>
+        <p class="login-error" id="loginError"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="dashboard" id="dashboard" style="display:none;">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2>Admin Panel</h2>
+        <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-section="hero">
+          <span class="nav-icon">🏠</span><span class="nav-label">Hero</span>
+        </a>
+        <a href="#" class="nav-item" data-section="projects">
+          <span class="nav-icon">📁</span><span class="nav-label">Projets</span>
+        </a>
+        <a href="#" class="nav-item" data-section="skills">
+          <span class="nav-icon">⚡</span><span class="nav-label">Compétences</span>
+        </a>
+        <a href="#" class="nav-item" data-section="experience">
+          <span class="nav-icon">💼</span><span class="nav-label">Expérience</span>
+        </a>
+        <a href="#" class="nav-item" data-section="education">
+          <span class="nav-icon">🎓</span><span class="nav-label">Formation</span>
+        </a>
+        <a href="#" class="nav-item" data-section="certifications">
+          <span class="nav-icon">🏆</span><span class="nav-label">Certifications</span>
+        </a>
+        <a href="#" class="nav-item" data-section="contact">
+          <span class="nav-icon">📧</span><span class="nav-label">Contact</span>
+        </a>
+        <hr class="sidebar-divider">
+        <a href="#" class="nav-item" data-section="data">
+          <span class="nav-icon">💾</span><span class="nav-label">Données</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="../" class="btn-view-site" target="_blank">👁 Voir le site</a>
+        <button class="btn-logout" id="logoutBtn">Déconnexion</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+      <header class="top-bar">
+        <h1 id="sectionTitle">Section Hero</h1>
+        <div class="top-bar-actions">
+          <span class="db-status" id="dbStatus">SQLite ✓</span>
+        </div>
+      </header>
+
+      <div class="content-area" id="contentArea">
+
+        <!-- HERO SECTION -->
+        <section class="panel" id="panel-hero">
+          <div class="panel-header"><h2>Contenu Hero</h2></div>
+          <div class="panel-body">
+            <div class="hero-photo-upload">
+              <img class="img-preview" id="heroPhotoPreview" src="" alt="Photo" style="display:none">
+              <div class="photo-controls">
+                <label>Photo de profil</label>
+                <button type="button" class="btn-upload-img">📷 Changer la photo</button>
+                <input type="file" class="img-file-input" accept="image/*" style="display:none">
+                <input type="hidden" id="heroPhoto">
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Salutation</label>
+              <input type="text" id="heroGreeting" placeholder="Bonjour, je suis">
+            </div>
+            <div class="form-field">
+              <label>Titre</label>
+              <input type="text" id="heroTitle" placeholder="Vianney AKA">
+            </div>
+            <div class="form-field">
+              <label>Sous-titre</label>
+              <input type="text" id="heroSubtitle" placeholder="Développeur Full Stack...">
+            </div>
+            <div class="form-field">
+              <label>Description</label>
+              <textarea id="heroDescription" rows="4" placeholder="Votre description..."></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Années d'expérience</label>
+                <input type="number" id="statExperience" placeholder="5">
+              </div>
+              <div class="form-field">
+                <label>Jeunes formés</label>
+                <input type="number" id="statYouth" placeholder="300">
+              </div>
+              <div class="form-field">
+                <label>Utilisateurs actifs</label>
+                <input type="number" id="statUsers" placeholder="200">
+              </div>
+            </div>
+            <button class="btn-save" onclick="AdminDashboard.saveHero()">Sauvegarder</button>
+          </div>
+        </section>
+
+        <!-- PROJECTS SECTION -->
+        <section class="panel" id="panel-projects" style="display:none;">
+          <div class="panel-header">
+            <h2>Projets</h2>
+            <button class="btn-add" onclick="AdminDashboard.addProject()">+ Ajouter</button>
+          </div>
+          <div class="panel-body">
+            <div id="projectsList" class="items-list"></div>
+          </div>
+        </section>
+
+        <!-- SKILLS SECTION -->
+        <section class="panel" id="panel-skills" style="display:none;">
+          <div class="panel-header">
+            <h2>Compétences</h2>
+            <button class="btn-add" onclick="AdminDashboard.addSkillCategory()">+ Catégorie</button>
+          </div>
+          <div class="panel-body">
+            <div id="skillsList" class="items-list"></div>
+          </div>
+        </section>
+
+        <!-- EXPERIENCE SECTION -->
+        <section class="panel" id="panel-experience" style="display:none;">
+          <div class="panel-header">
+            <h2>Expérience Professionnelle</h2>
+            <button class="btn-add" onclick="AdminDashboard.addExperience()">+ Ajouter</button>
+          </div>
+          <div class="panel-body">
+            <div id="experienceList" class="items-list"></div>
+          </div>
+        </section>
+
+        <!-- EDUCATION SECTION -->
+        <section class="panel" id="panel-education" style="display:none;">
+          <div class="panel-header">
+            <h2>Formation</h2>
+            <button class="btn-add" onclick="AdminDashboard.addEducation()">+ Ajouter</button>
+          </div>
+          <div class="panel-body">
+            <div id="educationList" class="items-list"></div>
+          </div>
+        </section>
+
+        <!-- CERTIFICATIONS SECTION -->
+        <section class="panel" id="panel-certifications" style="display:none;">
+          <div class="panel-header">
+            <h2>Certifications & Impact</h2>
+            <button class="btn-add" onclick="AdminDashboard.addCertification()">+ Ajouter</button>
+          </div>
+          <div class="panel-body">
+            <div id="certificationsList" class="items-list"></div>
+          </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section class="panel" id="panel-contact" style="display:none;">
+          <div class="panel-header"><h2>Informations de Contact</h2></div>
+          <div class="panel-body">
+            <div class="form-field">
+              <label>Email</label>
+              <input type="email" id="contactEmail" placeholder="contact@vianney-aka.com">
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Téléphone 1</label>
+                <input type="text" id="contactPhone1" placeholder="+225 07 89 81 43 08">
+              </div>
+              <div class="form-field">
+                <label>Téléphone 2</label>
+                <input type="text" id="contactPhone2" placeholder="+225 01 40 39 95 80">
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Localisation</label>
+              <input type="text" id="contactLocation" placeholder="Abidjan, Côte d'Ivoire">
+            </div>
+            <div class="form-field">
+              <label>Description footer</label>
+              <input type="text" id="footerDescription" placeholder="Développeur passionné...">
+            </div>
+            <button class="btn-save" onclick="AdminDashboard.saveContact()">Sauvegarder</button>
+          </div>
+        </section>
+
+        <!-- DATA MANAGEMENT SECTION -->
+        <section class="panel" id="panel-data" style="display:none;">
+          <div class="panel-header"><h2>Gestion des Données</h2></div>
+          <div class="panel-body">
+            <div class="data-actions">
+              <div class="data-card">
+                <h3>💾 Exporter</h3>
+                <p>Télécharger toutes les données en JSON</p>
+                <button class="btn-export" onclick="AdminDashboard.exportData()">Exporter JSON</button>
+              </div>
+              <div class="data-card">
+                <h3>📂 Importer</h3>
+                <p>Charger des données depuis un fichier JSON</p>
+                <input type="file" id="importFile" accept=".json" style="display:none">
+                <button class="btn-import" onclick="document.getElementById('importFile').click()">Importer JSON</button>
+              </div>
+              <div class="data-card danger">
+                <h3>🗑️ Réinitialiser</h3>
+                <p>Remettre les données par défaut</p>
+                <button class="btn-danger" onclick="AdminDashboard.resetData()">Réinitialiser</button>
+              </div>
+              <div class="data-card">
+                <h3>🔄 Synchroniser</h3>
+                <p>Pousser les données vers le site public (localStorage)</p>
+                <button class="btn-sync" onclick="AdminDashboard.syncData()">Synchroniser</button>
+              </div>
+            </div>
+            <div class="db-info">
+              <h3>Informations Base de Données</h3>
+              <pre id="dbInfo"></pre>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toastContainer"></div>
+
+  <!-- sql.js from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
+  <script src="../assets/db.js"></script>
+  <script src="../assets/admin-dashboard.js"></script>
+</body>
+</html>

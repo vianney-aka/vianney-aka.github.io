@@ -614,10 +614,7 @@ body.light-mode .hero-image img {
 }
 
 /* Performance optimizations */
-.hero-content > *,
-.project-card,
-.skill-category,
-.timeline-item {
+.hero-content > * {
   transform: translateZ(0);
   backface-visibility: hidden;
 }
@@ -742,7 +739,7 @@ body.light-mode .filter-btn.active {
   transition: transform 0.3s ease;
 }
 
-.project-card:hover {
+.project-card.revealed:hover {
   transform: translateY(-10px);
   box-shadow: 0 28px 70px rgba(10, 30, 60, 0.6);
   border-color: rgba(92, 151, 255, 0.65);
@@ -876,7 +873,7 @@ body.light-mode .project-card {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-body.light-mode .project-card:hover {
+body.light-mode .project-card.revealed:hover {
   box-shadow: 0 14px 40px rgba(0, 0, 0, 0.14);
   border-color: rgba(45, 123, 255, 0.4);
   background: linear-gradient(170deg, rgba(255, 255, 255, 1) 0%, rgba(246, 249, 255, 1) 100%);
@@ -928,7 +925,7 @@ body.light-mode .skill-category {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
-body.light-mode .skill-category:hover {
+body.light-mode .skill-category.revealed:hover {
   border-color: rgba(45, 123, 255, 0.3);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
   background: linear-gradient(165deg, rgba(255, 255, 255, 1) 0%, rgba(246, 249, 255, 1) 100%);
@@ -987,7 +984,7 @@ body.light-mode .cert-badges span {
   left: 100%;
 }
 
-.skill-category:hover {
+.skill-category.revealed:hover {
   border-color: rgba(92, 151, 255, 0.6);
   transform: translateY(-6px);
   box-shadow: 0 20px 55px rgba(8, 20, 44, 0.55);
@@ -1234,7 +1231,7 @@ body.light-mode .info-item {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
-body.light-mode .info-item:hover {
+body.light-mode .info-item.revealed:hover {
   border-color: rgba(45, 123, 255, 0.3);
   background: linear-gradient(160deg, rgba(255, 255, 255, 1) 0%, rgba(246, 249, 255, 1) 100%);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
@@ -1304,7 +1301,7 @@ body.light-mode .form-group textarea::placeholder {
   transform: scaleY(1);
 }
 
-.info-item:hover {
+.info-item.revealed:hover {
   border-color: rgba(92, 151, 255, 0.65);
   transform: translateX(8px);
   background: linear-gradient(160deg, rgba(24, 48, 88, 0.95) 0%, rgba(12, 28, 56, 0.97) 100%);
@@ -1822,16 +1819,7 @@ body.light-mode .footer-bottom {
   }
 }
 
-/* Scroll reveal */
-[data-aos] {
-  opacity: 0;
-  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
-              transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-[data-aos].aos-animate {
-  opacity: 1;
-}
+/* Scroll reveal handled by admin.css */
 
 /* Pulse animation for important elements */
 @keyframes pulse {

@@ -124,65 +124,47 @@ filterBtns.forEach(btn => {
       const category = card.getAttribute('data-category');
       
       if (filter === 'all' || category === filter) {
-        // Stagger animation for smooth appearance
         setTimeout(() => {
-          card.style.display = 'block';
-          card.style.opacity = '0';
-          card.style.transform = 'translateY(20px)';
+          card.style.display = '';
+          card.classList.remove('revealed');
           
           requestAnimationFrame(() => {
-            card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
+            requestAnimationFrame(() => {
+              card.classList.add('revealed');
+            });
           });
-        }, index * 50);
+        }, index * 60);
       } else {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(-20px)';
+        card.classList.remove('revealed');
         setTimeout(() => {
           card.style.display = 'none';
-        }, 300);
+        }, 400);
       }
     });
   });
 });
 
 // ===================================
-// SCROLL ANIMATIONS (Intersection Observer)
+// SKILL BAR ANIMATION (on reveal)
 // ===================================
-const observerOptions = {
-  threshold: 0.1,
-  rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
+const skillObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      entry.target.classList.add('aos-animate');
-      
-      // Animate skill bars when visible
-      if (entry.target.classList.contains('skill-category')) {
-        const skillBars = entry.target.querySelectorAll('.skill-bar div');
-        skillBars.forEach(bar => {
-          const width = bar.style.width;
-          bar.style.width = '0';
-          setTimeout(() => {
-            bar.style.width = width;
-          }, 100);
-        });
-      }
+      const skillBars = entry.target.querySelectorAll('.skill-bar div');
+      skillBars.forEach((bar, i) => {
+        const width = bar.style.width;
+        bar.style.width = '0';
+        setTimeout(() => {
+          bar.style.width = width;
+        }, 150 + i * 80);
+      });
+      skillObserver.unobserve(entry.target);
     }
   });
-}, observerOptions);
+}, { threshold: 0.2 });
 
-// Observe all elements with data-aos attribute
-document.querySelectorAll('[data-aos]').forEach(el => {
-  observer.observe(el);
-});
-
-// Observe skill categories for bar animation
 document.querySelectorAll('.skill-category').forEach(el => {
-  observer.observe(el);
+  skillObserver.observe(el);
 });
 
 // ===================================
@@ -258,68 +240,7 @@ if (contactForm) {
   });
 }
 
-// ===================================
-// TYPING EFFECT (Optional)
-// ===================================
-function typeWriter(element, text, speed = 100) {
-  let i = 0;
-  element.textContent = '';
-  
-  function type() {
-    if (i < text.length) {
-      element.textContent += text.charAt(i);
-      i++;
-      setTimeout(type, speed);
-    }
-  }
-  
-  type();
-}
-
-// Example usage (uncomment to activate):
-// const heroTitle = document.querySelector('.hero-title');
-// if (heroTitle) {
-//   const originalText = heroTitle.textContent;
-//   typeWriter(heroTitle, originalText, 80);
-// }
-
-// ===================================
-// PARALLAX EFFECT (Optimized)
-// ===================================
-let parallaxTicking = false;
-
-function updateParallax() {
-  const scrolled = window.pageYOffset;
-  const parallaxElements = document.querySelectorAll('.hero-image');
-  
-  parallaxElements.forEach(el => {
-    const speed = 0.3;
-    el.style.transform = `translate3d(0, ${scrolled * speed}px, 0)`;
-  });
-  
-  parallaxTicking = false;
-}
-
-window.addEventListener('scroll', () => {
-  if (!parallaxTicking) {
-    window.requestAnimationFrame(updateParallax);
-    parallaxTicking = true;
-  }
-}, { passive: true });
-
-// ===================================
-// CURSOR TRAIL EFFECT (Optional)
-// ===================================
-let cursorTrail = [];
-const trailLength = 10;
-
-document.addEventListener('mousemove', (e) => {
-  cursorTrail.push({ x: e.clientX, y: e.clientY });
-  
-  if (cursorTrail.length > trailLength) {
-    cursorTrail.shift();
-  }
-});
+// Typing effect and parallax are handled by admin.js
 
 // ===================================
 // LAZY LOADING IMAGES (Enhanced)
