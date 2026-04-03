@@ -5,7 +5,6 @@ const AdminDashboard = (function () {
   'use strict';
 
   const PASS_KEY = 'admin_session';
-  // Default password: 'vianney2025'
   function hashPass(str) {
     let h = 0;
     for (let i = 0; i < str.length; i++) {
@@ -21,34 +20,49 @@ const AdminDashboard = (function () {
   // ===================================
   // TOAST
   // ===================================
-  function toast(msg, type = 'info') {
-    const c = document.getElementById('toastContainer');
-    const t = document.createElement('div');
-    t.className = `toast ${type}`;
+  function toast(msg, type) {
+    type = type || 'info';
+    var c = document.getElementById('toastContainer');
+    if (!c) return;
+    var t = document.createElement('div');
+    t.className = 'toast ' + type;
     t.textContent = msg;
     c.appendChild(t);
-    requestAnimationFrame(() => t.classList.add('show'));
-    setTimeout(() => {
+    requestAnimationFrame(function () { t.classList.add('show'); });
+    setTimeout(function () {
       t.classList.remove('show');
-      setTimeout(() => t.remove(), 350);
+      setTimeout(function () { t.remove(); }, 350);
     }, 3000);
+  }
+
+  // Safe wrapper for all async operations
+  async function safeRun(fn, errMsg) {
+    if (!dbReady) { toast('Base de données non prête. Rechargez la page.', 'error'); return false; }
+    try {
+      await fn();
+      return true;
+    } catch (err) {
+      console.error(errMsg || 'Erreur', err);
+      toast((errMsg || 'Erreur') + ': ' + (err.message || err), 'error');
+      return false;
+    }
   }
 
   // ===================================
   // AUTH
   // ===================================
   function initAuth() {
-    const form = document.getElementById('loginForm');
-    const errEl = document.getElementById('loginError');
+    var form = document.getElementById('loginForm');
+    var errEl = document.getElementById('loginError');
 
     if (sessionStorage.getItem(PASS_KEY) === 'true') {
       showDashboard();
       return;
     }
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', function (e) {
       e.preventDefault();
-      const pass = document.getElementById('loginPassword').value;
+      var pass = document.getElementById('loginPassword').value;
       if (hashPass(pass) === VALID_HASH) {
         sessionStorage.setItem(PASS_KEY, 'true');
         showDashboard();
@@ -58,7 +72,7 @@ const AdminDashboard = (function () {
       }
     });
 
-    document.getElementById('logoutBtn').addEventListener('click', () => {
+    document.getElementById('logoutBtn').addEventListener('click', function () {
       sessionStorage.removeItem(PASS_KEY);
       location.reload();
     });
@@ -68,8 +82,7 @@ const AdminDashboard = (function () {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('dashboard').style.display = 'flex';
 
-    // Show loading
-    const overlay = document.createElement('div');
+    var overlay = document.createElement('div');
     overlay.className = 'loading-overlay';
     overlay.innerHTML = '<div class="loading-spinner"></div>';
     document.body.appendChild(overlay);
@@ -78,12 +91,13 @@ const AdminDashboard = (function () {
       await PortfolioDB.init();
       dbReady = true;
       document.getElementById('dbStatus').textContent = 'SQLite ✓';
+      console.log('[Admin] DB initialisée OK');
       loadCurrentSection();
     } catch (err) {
-      console.error('DB Init Error:', err);
-      document.getElementById('dbStatus').textContent = 'SQLite ✗';
+      console.error('[Admin] DB Init Error:', err);
+      document.getElementById('dbStatus').textContent = 'SQLite ✗ Erreur';
       document.getElementById('dbStatus').style.color = 'var(--admin-accent)';
-      toast('Erreur d\'initialisation de la base de données', 'error');
+      toast('Erreur DB: ' + (err.message || err), 'error');
     }
 
     overlay.remove();
@@ -93,63 +107,56 @@ const AdminDashboard = (function () {
   // ===================================
   // NAVIGATION
   // ===================================
-  let currentSection = 'hero';
+  var currentSection = 'hero';
 
   function initNavigation() {
-    document.querySelectorAll('.nav-item[data-section]').forEach(item => {
-      item.addEventListener('click', (e) => {
+    document.querySelectorAll('.nav-item[data-section]').forEach(function (item) {
+      item.addEventListener('click', function (e) {
         e.preventDefault();
-        const section = item.getAttribute('data-section');
-        switchSection(section);
+        switchSection(item.getAttribute('data-section'));
       });
     });
-
-    // Mobile sidebar
-    const topBar = document.querySelector('.top-bar');
+    var topBar = document.querySelector('.top-bar');
     if (topBar) {
-      topBar.addEventListener('click', (e) => {
-        if (window.innerWidth <= 768) {
-          document.getElementById('sidebar').classList.toggle('open');
-        }
+      topBar.addEventListener('click', function () {
+        if (window.innerWidth <= 768) document.getElementById('sidebar').classList.toggle('open');
       });
     }
   }
 
   function switchSection(section) {
     currentSection = section;
-
-    // Update nav
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    const activeNav = document.querySelector(`.nav-item[data-section="${section}"]`);
+    document.querySelectorAll('.nav-item').forEach(function (n) { n.classList.remove('active'); });
+    var activeNav = document.querySelector('.nav-item[data-section="' + section + '"]');
     if (activeNav) activeNav.classList.add('active');
 
-    // Update title
-    const titles = { hero: 'Section Hero', projects: 'Projets', skills: 'Compétences', experience: 'Expérience', education: 'Formation', certifications: 'Certifications', contact: 'Contact', data: 'Gestion des Données' };
+    var titles = { hero: 'Section Hero', projects: 'Projets', skills: 'Compétences', experience: 'Expérience', education: 'Formation', certifications: 'Certifications', contact: 'Contact', data: 'Gestion des Données' };
     document.getElementById('sectionTitle').textContent = titles[section] || section;
 
-    // Show panel
-    document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
-    const panel = document.getElementById(`panel-${section}`);
+    document.querySelectorAll('.panel').forEach(function (p) { p.style.display = 'none'; });
+    var panel = document.getElementById('panel-' + section);
     if (panel) panel.style.display = 'block';
 
-    // Load data
     loadCurrentSection();
-
-    // Close mobile sidebar
     document.getElementById('sidebar').classList.remove('open');
   }
 
   function loadCurrentSection() {
     if (!dbReady) return;
-    switch (currentSection) {
-      case 'hero': loadHero(); break;
-      case 'projects': loadProjects(); break;
-      case 'skills': loadSkills(); break;
-      case 'experience': loadExperiences(); break;
-      case 'education': loadEducation(); break;
-      case 'certifications': loadCertifications(); break;
-      case 'contact': loadContact(); break;
-      case 'data': loadDataInfo(); break;
+    try {
+      switch (currentSection) {
+        case 'hero': loadHero(); break;
+        case 'projects': loadProjects(); break;
+        case 'skills': loadSkills(); break;
+        case 'experience': loadExperiences(); break;
+        case 'education': loadEducation(); break;
+        case 'certifications': loadCertifications(); break;
+        case 'contact': loadContact(); break;
+        case 'data': loadDataInfo(); break;
+      }
+    } catch (err) {
+      console.error('[Admin] Load section error:', err);
+      toast('Erreur chargement section: ' + err.message, 'error');
     }
   }
 
@@ -157,7 +164,7 @@ const AdminDashboard = (function () {
   // HERO
   // ===================================
   function loadHero() {
-    const s = PortfolioDB.getAllSettings();
+    var s = PortfolioDB.getAllSettings();
     document.getElementById('heroGreeting').value = s.hero_greeting || '';
     document.getElementById('heroTitle').value = s.hero_title || '';
     document.getElementById('heroSubtitle').value = s.hero_subtitle || '';
@@ -165,399 +172,510 @@ const AdminDashboard = (function () {
     document.getElementById('statExperience').value = s.stat_experience || '';
     document.getElementById('statYouth').value = s.stat_youth || '';
     document.getElementById('statUsers').value = s.stat_users || '';
-    // Profile photo
-    const photoPreview = document.getElementById('heroPhotoPreview');
-    const photoInput = document.getElementById('heroPhoto');
+    var photoPreview = document.getElementById('heroPhotoPreview');
+    var photoInput = document.getElementById('heroPhoto');
     if (s.hero_photo && photoPreview) { photoPreview.src = s.hero_photo; photoPreview.style.display = 'block'; }
     if (s.hero_photo && photoInput) photoInput.value = s.hero_photo;
   }
 
   async function saveHero() {
-    PortfolioDB.setSetting('hero_greeting', document.getElementById('heroGreeting').value);
-    PortfolioDB.setSetting('hero_title', document.getElementById('heroTitle').value);
-    PortfolioDB.setSetting('hero_subtitle', document.getElementById('heroSubtitle').value);
-    PortfolioDB.setSetting('hero_description', document.getElementById('heroDescription').value);
-    PortfolioDB.setSetting('stat_experience', document.getElementById('statExperience').value);
-    PortfolioDB.setSetting('stat_youth', document.getElementById('statYouth').value);
-    PortfolioDB.setSetting('stat_users', document.getElementById('statUsers').value);
-    const photoVal = document.getElementById('heroPhoto').value;
-    if (photoVal) PortfolioDB.setSetting('hero_photo', photoVal);
-    await PortfolioDB.persist();
-    toast('Hero sauvegardé !', 'success');
+    await safeRun(async function () {
+      PortfolioDB.setSetting('hero_greeting', document.getElementById('heroGreeting').value);
+      PortfolioDB.setSetting('hero_title', document.getElementById('heroTitle').value);
+      PortfolioDB.setSetting('hero_subtitle', document.getElementById('heroSubtitle').value);
+      PortfolioDB.setSetting('hero_description', document.getElementById('heroDescription').value);
+      PortfolioDB.setSetting('stat_experience', document.getElementById('statExperience').value);
+      PortfolioDB.setSetting('stat_youth', document.getElementById('statYouth').value);
+      PortfolioDB.setSetting('stat_users', document.getElementById('statUsers').value);
+      var photoVal = document.getElementById('heroPhoto').value;
+      if (photoVal) PortfolioDB.setSetting('hero_photo', photoVal);
+      await PortfolioDB.persist();
+      toast('Hero sauvegardé !', 'success');
+    }, 'Erreur sauvegarde Hero');
   }
 
   // ===================================
   // PROJECTS
   // ===================================
   function loadProjects() {
-    const projects = PortfolioDB.getAll('projects');
-    const container = document.getElementById('projectsList');
-    container.innerHTML = '';
+    var projects = PortfolioDB.getAll('projects');
+    var container = document.getElementById('projectsList');
+    var html = [];
 
-    projects.forEach(p => {
-      const tags = safeJSON(p.tags_json, []);
-      const metrics = safeJSON(p.metrics_json, []);
+    projects.forEach(function (p) {
+      var tags = safeJSON(p.tags_json, []);
+      var metrics = safeJSON(p.metrics_json, []);
+      var imgSrc = p.image_url || '';
+      var imgDisplay = imgSrc ? 'block' : 'none';
 
-      container.innerHTML += `
-        <div class="item-card" data-id="${p.id}">
-          <div class="item-card-header">
-            <h3>${esc(p.title)}</h3>
-            <span class="item-badge">#${p.id} · ${esc(p.category)}</span>
-          </div>
-          <div class="form-row">
-            <div class="form-field"><label>Titre</label><input type="text" value="${esc(p.title)}" data-field="title"></div>
-            <div class="form-field"><label>Badge</label><input type="text" value="${esc(p.badge)}" data-field="badge"></div>
-          </div>
-          <div class="form-row">
-            <div class="form-field">
-              <label>Catégorie</label>
-              <select data-field="category">
-                <option value="laravel" ${p.category==='laravel'?'selected':''}>Laravel</option>
-                <option value="moodle" ${p.category==='moodle'?'selected':''}>Moodle</option>
-                <option value="python" ${p.category==='python'?'selected':''}>Python</option>
-                <option value="wordpress" ${p.category==='wordpress'?'selected':''}>WordPress</option>
-              </select>
-            </div>
-            <div class="form-field">
-              <label>Type badge</label>
-              <select data-field="badge_type">
-                <option value="default" ${p.badge_type==='default'?'selected':''}>Default</option>
-                <option value="award" ${p.badge_type==='award'?'selected':''}>Award</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-field"><label>Description</label><textarea data-field="description" rows="2">${esc(p.description)}</textarea></div>
-          <div class="image-upload-zone">
-            <img class="img-preview" src="${esc(p.image_url)}" alt="Preview" style="display:${p.image_url ? 'block' : 'none'}">
-            <div class="image-upload-actions">
-              <button type="button" class="btn-upload-img">📷 Changer l'image</button>
-              <input type="file" class="img-file-input" accept="image/*" style="display:none">
-              <span class="img-hint">ou collez une URL ci-dessous</span>
-            </div>
-            <input type="text" value="${esc(p.image_url)}" data-field="image_url" placeholder="URL ou upload ci-dessus">
-          </div>
-          <div class="form-field"><label>Lien URL</label><input type="text" value="${esc(p.link_url)}" data-field="link_url"></div>
-          <div class="form-field"><label>Tags (séparés par virgule)</label><input type="text" value="${tags.join(', ')}" data-field="tags_json"></div>
-          <div class="form-field"><label>Métriques (JSON: [{label,value}])</label><input type="text" value='${JSON.stringify(metrics)}' data-field="metrics_json"></div>
-          <div class="form-field"><label>Ordre</label><input type="number" value="${p.sort_order}" data-field="sort_order" style="width:80px"></div>
-          <div class="item-card-actions">
-            <button class="btn-item-save" onclick="AdminDashboard.saveProject(${p.id})">Sauvegarder</button>
-            <button class="btn-item-delete" onclick="AdminDashboard.deleteProject(${p.id})">Supprimer</button>
-          </div>
-        </div>`;
+      html.push(
+        '<div class="item-card" data-id="' + p.id + '">' +
+          '<div class="item-card-header">' +
+            '<h3>' + esc(p.title) + '</h3>' +
+            '<span class="item-badge">#' + p.id + ' · ' + esc(p.category) + '</span>' +
+          '</div>' +
+          '<div class="form-row">' +
+            '<div class="form-field"><label>Titre</label><input type="text" data-field="title"></div>' +
+            '<div class="form-field"><label>Badge</label><input type="text" data-field="badge"></div>' +
+          '</div>' +
+          '<div class="form-row">' +
+            '<div class="form-field"><label>Catégorie</label>' +
+              '<select data-field="category">' +
+                '<option value="laravel"' + (p.category==='laravel'?' selected':'') + '>Laravel</option>' +
+                '<option value="moodle"' + (p.category==='moodle'?' selected':'') + '>Moodle</option>' +
+                '<option value="python"' + (p.category==='python'?' selected':'') + '>Python</option>' +
+                '<option value="wordpress"' + (p.category==='wordpress'?' selected':'') + '>WordPress</option>' +
+              '</select></div>' +
+            '<div class="form-field"><label>Type badge</label>' +
+              '<select data-field="badge_type">' +
+                '<option value="default"' + (p.badge_type==='default'?' selected':'') + '>Default</option>' +
+                '<option value="award"' + (p.badge_type==='award'?' selected':'') + '>Award</option>' +
+              '</select></div>' +
+          '</div>' +
+          '<div class="form-field"><label>Description</label><textarea data-field="description" rows="2"></textarea></div>' +
+          '<div class="image-upload-zone">' +
+            '<img class="img-preview" alt="Preview" style="display:' + imgDisplay + '">' +
+            '<div class="image-upload-actions">' +
+              '<button type="button" class="btn-upload-img">📷 Changer l\'image</button>' +
+              '<input type="file" class="img-file-input" accept="image/*" style="display:none">' +
+              '<span class="img-hint">ou collez une URL ci-dessous</span>' +
+            '</div>' +
+            '<input type="text" data-field="image_url" placeholder="URL ou upload ci-dessus">' +
+          '</div>' +
+          '<div class="form-field"><label>Lien URL</label><input type="text" data-field="link_url"></div>' +
+          '<div class="form-field"><label>Tags (séparés par virgule)</label><input type="text" data-field="tags_json"></div>' +
+          '<div class="form-field"><label>Métriques (JSON)</label><input type="text" data-field="metrics_json"></div>' +
+          '<div class="form-field"><label>Ordre</label><input type="number" data-field="sort_order" style="width:80px"></div>' +
+          '<div class="item-card-actions">' +
+            '<button class="btn-item-save" onclick="AdminDashboard.saveProject(' + p.id + ')">Sauvegarder</button>' +
+            '<button class="btn-item-delete" onclick="AdminDashboard.deleteProject(' + p.id + ')">Supprimer</button>' +
+          '</div>' +
+        '</div>'
+      );
+    });
+
+    container.innerHTML = html.join('');
+
+    // Set values programmatically (safe, no HTML escaping issues)
+    projects.forEach(function (p) {
+      var card = container.querySelector('[data-id="' + p.id + '"]');
+      if (!card) return;
+      var tags = safeJSON(p.tags_json, []);
+      var metrics = safeJSON(p.metrics_json, []);
+      setField(card, 'title', p.title);
+      setField(card, 'badge', p.badge);
+      setField(card, 'description', p.description);
+      setField(card, 'image_url', p.image_url);
+      setField(card, 'link_url', p.link_url);
+      setField(card, 'tags_json', tags.join(', '));
+      setField(card, 'metrics_json', JSON.stringify(metrics));
+      setField(card, 'sort_order', p.sort_order);
+      // Set image preview src
+      var img = card.querySelector('.img-preview');
+      if (img && p.image_url) img.src = p.image_url;
     });
   }
 
+  function setField(card, fieldName, value) {
+    var el = card.querySelector('[data-field="' + fieldName + '"]');
+    if (el) el.value = (value !== null && value !== undefined) ? value : '';
+  }
+
   async function saveProject(id) {
-    const card = document.querySelector(`.item-card[data-id="${id}"]`);
-    if (!card) return;
-    const data = {};
-    card.querySelectorAll('[data-field]').forEach(el => {
-      const f = el.getAttribute('data-field');
-      if (f === 'tags_json') {
-        data[f] = JSON.stringify(el.value.split(',').map(s => s.trim()).filter(Boolean));
-      } else if (f === 'metrics_json') {
-        try { data[f] = JSON.stringify(JSON.parse(el.value)); } catch { data[f] = '[]'; }
-      } else if (f === 'sort_order') {
-        data[f] = parseInt(el.value) || 0;
-      } else {
-        data[f] = el.tagName === 'TEXTAREA' ? el.value : el.value;
-      }
-    });
-    PortfolioDB.updateProject(id, data);
-    await PortfolioDB.persist();
-    toast('Projet sauvegardé !', 'success');
-    loadProjects();
+    await safeRun(async function () {
+      var card = document.querySelector('.item-card[data-id="' + id + '"]');
+      if (!card) throw new Error('Carte projet #' + id + ' introuvable');
+      var data = {};
+      card.querySelectorAll('[data-field]').forEach(function (el) {
+        var f = el.getAttribute('data-field');
+        if (f === 'tags_json') {
+          data[f] = JSON.stringify(el.value.split(',').map(function(s){return s.trim();}).filter(Boolean));
+        } else if (f === 'metrics_json') {
+          try { data[f] = JSON.stringify(JSON.parse(el.value)); } catch(e) { data[f] = '[]'; }
+        } else if (f === 'sort_order') {
+          data[f] = parseInt(el.value) || 0;
+        } else {
+          data[f] = el.value;
+        }
+      });
+      console.log('[Admin] Saving project', id, Object.keys(data));
+      PortfolioDB.updateProject(id, data);
+      await PortfolioDB.persist();
+      toast('Projet sauvegardé !', 'success');
+      loadProjects();
+    }, 'Erreur sauvegarde projet');
   }
 
   async function deleteProject(id) {
     if (!confirm('Supprimer ce projet ?')) return;
-    PortfolioDB.deleteById('projects', id);
-    await PortfolioDB.persist();
-    toast('Projet supprimé', 'info');
-    loadProjects();
+    await safeRun(async function () {
+      PortfolioDB.deleteById('projects', id);
+      await PortfolioDB.persist();
+      toast('Projet supprimé', 'info');
+      loadProjects();
+    }, 'Erreur suppression projet');
   }
 
   async function addProject() {
-    PortfolioDB.insertProject({ title: 'Nouveau Projet', description: '', category: 'laravel', sort_order: 99 });
-    await PortfolioDB.persist();
-    toast('Projet ajouté', 'success');
-    loadProjects();
+    await safeRun(async function () {
+      PortfolioDB.insertProject({ title: 'Nouveau Projet', description: '', category: 'laravel', sort_order: 99 });
+      await PortfolioDB.persist();
+      toast('Projet ajouté', 'success');
+      loadProjects();
+    }, 'Erreur ajout projet');
   }
 
   // ===================================
   // SKILLS
   // ===================================
   function loadSkills() {
-    const categories = PortfolioDB.getAll('skill_categories');
-    const container = document.getElementById('skillsList');
-    container.innerHTML = '';
+    var categories = PortfolioDB.getAll('skill_categories');
+    var container = document.getElementById('skillsList');
+    var html = [];
 
-    categories.forEach(cat => {
-      const skills = PortfolioDB.getSkillsByCategory(cat.id);
-      let skillsHTML = skills.map(s => `
-        <div class="skill-row" data-skill-id="${s.id}">
-          <input type="text" value="${esc(s.name)}" data-skill-field="name" placeholder="Nom">
-          <input type="number" value="${s.level}" data-skill-field="level" min="0" max="100" placeholder="%">
-          <button class="btn-remove-skill" onclick="AdminDashboard.deleteSkill(${s.id}, ${cat.id})">×</button>
-        </div>
-      `).join('');
+    categories.forEach(function (cat) {
+      var skills = PortfolioDB.getSkillsByCategory(cat.id);
+      var skillsHTML = skills.map(function (s) {
+        return '<div class="skill-row" data-skill-id="' + s.id + '">' +
+          '<input type="text" data-skill-field="name" placeholder="Nom">' +
+          '<input type="number" data-skill-field="level" min="0" max="100" placeholder="%">' +
+          '<button class="btn-remove-skill" onclick="AdminDashboard.deleteSkill(' + s.id + ',' + cat.id + ')">×</button>' +
+        '</div>';
+      }).join('');
 
-      container.innerHTML += `
-        <div class="item-card" data-cat-id="${cat.id}">
-          <div class="item-card-header">
-            <h3>${esc(cat.icon)} ${esc(cat.name)}</h3>
-            <span class="item-badge">ID #${cat.id}</span>
-          </div>
-          <div class="form-row">
-            <div class="form-field"><label>Nom catégorie</label><input type="text" value="${esc(cat.name)}" data-cat-field="name"></div>
-            <div class="form-field"><label>Icône</label><input type="text" value="${esc(cat.icon)}" data-cat-field="icon"></div>
-            <div class="form-field"><label>Ordre</label><input type="number" value="${cat.sort_order}" data-cat-field="sort_order" style="width:80px"></div>
-          </div>
-          <label style="font-size:0.8125rem;font-weight:600;color:var(--admin-text2);display:block;margin:0.75rem 0 0.5rem;">Compétences</label>
-          <div class="skills-container" data-cat="${cat.id}">${skillsHTML}</div>
-          <button class="btn-add-skill" onclick="AdminDashboard.addSkill(${cat.id})">+ Compétence</button>
-          <div class="item-card-actions">
-            <button class="btn-item-save" onclick="AdminDashboard.saveSkillCategory(${cat.id})">Sauvegarder</button>
-            <button class="btn-item-delete" onclick="AdminDashboard.deleteSkillCategory(${cat.id})">Supprimer catégorie</button>
-          </div>
-        </div>`;
+      html.push(
+        '<div class="item-card" data-cat-id="' + cat.id + '">' +
+          '<div class="item-card-header"><h3>' + esc(cat.icon) + ' ' + esc(cat.name) + '</h3><span class="item-badge">ID #' + cat.id + '</span></div>' +
+          '<div class="form-row">' +
+            '<div class="form-field"><label>Nom catégorie</label><input type="text" data-cat-field="name"></div>' +
+            '<div class="form-field"><label>Icône</label><input type="text" data-cat-field="icon"></div>' +
+            '<div class="form-field"><label>Ordre</label><input type="number" data-cat-field="sort_order" style="width:80px"></div>' +
+          '</div>' +
+          '<label style="font-size:0.8125rem;font-weight:600;color:var(--admin-text2);display:block;margin:0.75rem 0 0.5rem;">Compétences</label>' +
+          '<div class="skills-container" data-cat="' + cat.id + '">' + skillsHTML + '</div>' +
+          '<button class="btn-add-skill" onclick="AdminDashboard.addSkill(' + cat.id + ')">+ Compétence</button>' +
+          '<div class="item-card-actions">' +
+            '<button class="btn-item-save" onclick="AdminDashboard.saveSkillCategory(' + cat.id + ')">Sauvegarder</button>' +
+            '<button class="btn-item-delete" onclick="AdminDashboard.deleteSkillCategory(' + cat.id + ')">Supprimer catégorie</button>' +
+          '</div>' +
+        '</div>'
+      );
+
+      // We'll set values after innerHTML
+    });
+
+    container.innerHTML = html.join('');
+
+    // Set values programmatically
+    categories.forEach(function (cat) {
+      var card = container.querySelector('[data-cat-id="' + cat.id + '"]');
+      if (!card) return;
+      var nameEl = card.querySelector('[data-cat-field="name"]');
+      var iconEl = card.querySelector('[data-cat-field="icon"]');
+      var orderEl = card.querySelector('[data-cat-field="sort_order"]');
+      if (nameEl) nameEl.value = cat.name || '';
+      if (iconEl) iconEl.value = cat.icon || '';
+      if (orderEl) orderEl.value = cat.sort_order || 0;
+
+      var skills = PortfolioDB.getSkillsByCategory(cat.id);
+      skills.forEach(function (s) {
+        var row = card.querySelector('[data-skill-id="' + s.id + '"]');
+        if (!row) return;
+        var n = row.querySelector('[data-skill-field="name"]');
+        var l = row.querySelector('[data-skill-field="level"]');
+        if (n) n.value = s.name || '';
+        if (l) l.value = s.level || 80;
+      });
     });
   }
 
   async function saveSkillCategory(catId) {
-    const card = document.querySelector(`.item-card[data-cat-id="${catId}"]`);
-    if (!card) return;
-
-    const catData = {};
-    card.querySelectorAll('[data-cat-field]').forEach(el => {
-      const f = el.getAttribute('data-cat-field');
-      catData[f] = f === 'sort_order' ? (parseInt(el.value) || 0) : el.value;
-    });
-    PortfolioDB.updateSkillCategory(catId, catData);
-
-    // Save individual skills
-    card.querySelectorAll('.skill-row').forEach(row => {
-      const sid = parseInt(row.getAttribute('data-skill-id'));
-      const name = row.querySelector('[data-skill-field="name"]').value;
-      const level = parseInt(row.querySelector('[data-skill-field="level"]').value) || 80;
-      if (sid) PortfolioDB.updateSkill(sid, { name, level });
-    });
-
-    await PortfolioDB.persist();
-    toast('Catégorie sauvegardée !', 'success');
-    loadSkills();
+    await safeRun(async function () {
+      var card = document.querySelector('.item-card[data-cat-id="' + catId + '"]');
+      if (!card) throw new Error('Catégorie introuvable');
+      var catData = {};
+      card.querySelectorAll('[data-cat-field]').forEach(function (el) {
+        var f = el.getAttribute('data-cat-field');
+        catData[f] = f === 'sort_order' ? (parseInt(el.value) || 0) : el.value;
+      });
+      PortfolioDB.updateSkillCategory(catId, catData);
+      card.querySelectorAll('.skill-row').forEach(function (row) {
+        var sid = parseInt(row.getAttribute('data-skill-id'));
+        var name = row.querySelector('[data-skill-field="name"]').value;
+        var level = parseInt(row.querySelector('[data-skill-field="level"]').value) || 80;
+        if (sid) PortfolioDB.updateSkill(sid, { name: name, level: level });
+      });
+      await PortfolioDB.persist();
+      toast('Catégorie sauvegardée !', 'success');
+      loadSkills();
+    }, 'Erreur sauvegarde compétences');
   }
 
   async function addSkillCategory() {
-    PortfolioDB.insertSkillCategory({ name: 'Nouvelle Catégorie', icon: '📦', sort_order: 99 });
-    await PortfolioDB.persist();
-    toast('Catégorie ajoutée', 'success');
-    loadSkills();
+    await safeRun(async function () {
+      PortfolioDB.insertSkillCategory({ name: 'Nouvelle Catégorie', icon: '📦', sort_order: 99 });
+      await PortfolioDB.persist();
+      toast('Catégorie ajoutée', 'success');
+      loadSkills();
+    }, 'Erreur ajout catégorie');
   }
 
   async function deleteSkillCategory(catId) {
     if (!confirm('Supprimer cette catégorie et toutes ses compétences ?')) return;
-    PortfolioDB.deleteById('skill_categories', catId);
-    // Delete associated skills
-    const skills = PortfolioDB.getSkillsByCategory(catId);
-    skills.forEach(s => PortfolioDB.deleteById('skills', s.id));
-    await PortfolioDB.persist();
-    toast('Catégorie supprimée', 'info');
-    loadSkills();
+    await safeRun(async function () {
+      var skills = PortfolioDB.getSkillsByCategory(catId);
+      skills.forEach(function (s) { PortfolioDB.deleteById('skills', s.id); });
+      PortfolioDB.deleteById('skill_categories', catId);
+      await PortfolioDB.persist();
+      toast('Catégorie supprimée', 'info');
+      loadSkills();
+    }, 'Erreur suppression catégorie');
   }
 
   async function addSkill(catId) {
-    PortfolioDB.insertSkill({ category_id: catId, name: 'Nouvelle compétence', level: 80 });
-    await PortfolioDB.persist();
-    loadSkills();
+    await safeRun(async function () {
+      PortfolioDB.insertSkill({ category_id: catId, name: 'Nouvelle compétence', level: 80 });
+      await PortfolioDB.persist();
+      loadSkills();
+    }, 'Erreur ajout compétence');
   }
 
-  async function deleteSkill(skillId, catId) {
-    PortfolioDB.deleteById('skills', skillId);
-    await PortfolioDB.persist();
-    loadSkills();
+  async function deleteSkill(skillId) {
+    await safeRun(async function () {
+      PortfolioDB.deleteById('skills', skillId);
+      await PortfolioDB.persist();
+      loadSkills();
+    }, 'Erreur suppression compétence');
   }
 
   // ===================================
   // EXPERIENCES
   // ===================================
   function loadExperiences() {
-    const exps = PortfolioDB.getAll('experiences');
-    const container = document.getElementById('experienceList');
-    container.innerHTML = '';
+    var exps = PortfolioDB.getAll('experiences');
+    var container = document.getElementById('experienceList');
+    var html = [];
 
-    exps.forEach(e => {
-      const items = safeJSON(e.items_json, []);
-      container.innerHTML += `
-        <div class="item-card" data-id="${e.id}">
-          <div class="item-card-header">
-            <h3>${esc(e.title)}</h3>
-            <span class="item-badge">${esc(e.date_range)}</span>
-          </div>
-          <div class="form-row">
-            <div class="form-field"><label>Période</label><input type="text" value="${esc(e.date_range)}" data-field="date_range"></div>
-            <div class="form-field"><label>Ordre</label><input type="number" value="${e.sort_order}" data-field="sort_order" style="width:80px"></div>
-          </div>
-          <div class="form-field"><label>Titre du poste</label><input type="text" value="${esc(e.title)}" data-field="title"></div>
-          <div class="form-field"><label>Entreprise</label><input type="text" value="${esc(e.company)}" data-field="company"></div>
-          <div class="form-field"><label>Missions (une par ligne)</label><textarea data-field="items_json" rows="4">${items.join('\n')}</textarea></div>
-          <div class="item-card-actions">
-            <button class="btn-item-save" onclick="AdminDashboard.saveExperience(${e.id})">Sauvegarder</button>
-            <button class="btn-item-delete" onclick="AdminDashboard.deleteExperience(${e.id})">Supprimer</button>
-          </div>
-        </div>`;
+    exps.forEach(function (e) {
+      var items = safeJSON(e.items_json, []);
+      html.push(
+        '<div class="item-card" data-id="' + e.id + '">' +
+          '<div class="item-card-header"><h3>' + esc(e.title) + '</h3><span class="item-badge">' + esc(e.date_range) + '</span></div>' +
+          '<div class="form-row">' +
+            '<div class="form-field"><label>Période</label><input type="text" data-field="date_range"></div>' +
+            '<div class="form-field"><label>Ordre</label><input type="number" data-field="sort_order" style="width:80px"></div>' +
+          '</div>' +
+          '<div class="form-field"><label>Titre du poste</label><input type="text" data-field="title"></div>' +
+          '<div class="form-field"><label>Entreprise</label><input type="text" data-field="company"></div>' +
+          '<div class="form-field"><label>Missions (une par ligne)</label><textarea data-field="items_json" rows="4"></textarea></div>' +
+          '<div class="item-card-actions">' +
+            '<button class="btn-item-save" onclick="AdminDashboard.saveExperience(' + e.id + ')">Sauvegarder</button>' +
+            '<button class="btn-item-delete" onclick="AdminDashboard.deleteExperience(' + e.id + ')">Supprimer</button>' +
+          '</div>' +
+        '</div>'
+      );
+    });
+
+    container.innerHTML = html.join('');
+
+    exps.forEach(function (e) {
+      var card = container.querySelector('[data-id="' + e.id + '"]');
+      if (!card) return;
+      var items = safeJSON(e.items_json, []);
+      setField(card, 'date_range', e.date_range);
+      setField(card, 'sort_order', e.sort_order);
+      setField(card, 'title', e.title);
+      setField(card, 'company', e.company);
+      setField(card, 'items_json', items.join('\n'));
     });
   }
 
   async function saveExperience(id) {
-    const card = document.querySelector(`.item-card[data-id="${id}"]`);
-    if (!card) return;
-    const data = {};
-    card.querySelectorAll('[data-field]').forEach(el => {
-      const f = el.getAttribute('data-field');
-      if (f === 'items_json') {
-        data[f] = JSON.stringify(el.value.split('\n').map(s => s.trim()).filter(Boolean));
-      } else if (f === 'sort_order') {
-        data[f] = parseInt(el.value) || 0;
-      } else {
-        data[f] = el.value;
-      }
-    });
-    PortfolioDB.updateExperience(id, data);
-    await PortfolioDB.persist();
-    toast('Expérience sauvegardée !', 'success');
-    loadExperiences();
+    await safeRun(async function () {
+      var card = document.querySelector('.item-card[data-id="' + id + '"]');
+      if (!card) throw new Error('Carte introuvable');
+      var data = {};
+      card.querySelectorAll('[data-field]').forEach(function (el) {
+        var f = el.getAttribute('data-field');
+        if (f === 'items_json') {
+          data[f] = JSON.stringify(el.value.split('\n').map(function(s){return s.trim();}).filter(Boolean));
+        } else if (f === 'sort_order') {
+          data[f] = parseInt(el.value) || 0;
+        } else {
+          data[f] = el.value;
+        }
+      });
+      PortfolioDB.updateExperience(id, data);
+      await PortfolioDB.persist();
+      toast('Expérience sauvegardée !', 'success');
+      loadExperiences();
+    }, 'Erreur sauvegarde expérience');
   }
 
   async function deleteExperience(id) {
     if (!confirm('Supprimer cette expérience ?')) return;
-    PortfolioDB.deleteById('experiences', id);
-    await PortfolioDB.persist();
-    toast('Expérience supprimée', 'info');
-    loadExperiences();
+    await safeRun(async function () {
+      PortfolioDB.deleteById('experiences', id);
+      await PortfolioDB.persist();
+      toast('Expérience supprimée', 'info');
+      loadExperiences();
+    }, 'Erreur suppression expérience');
   }
 
   async function addExperience() {
-    PortfolioDB.insertExperience({ date_range: 'Date', title: 'Nouveau Poste', company: '', items_json: '[]', sort_order: 99 });
-    await PortfolioDB.persist();
-    toast('Expérience ajoutée', 'success');
-    loadExperiences();
+    await safeRun(async function () {
+      PortfolioDB.insertExperience({ date_range: 'Date', title: 'Nouveau Poste', company: '', items_json: '[]', sort_order: 99 });
+      await PortfolioDB.persist();
+      toast('Expérience ajoutée', 'success');
+      loadExperiences();
+    }, 'Erreur ajout expérience');
   }
 
   // ===================================
   // EDUCATION
   // ===================================
   function loadEducation() {
-    const edus = PortfolioDB.getAll('education');
-    const container = document.getElementById('educationList');
-    container.innerHTML = '';
+    var edus = PortfolioDB.getAll('education');
+    var container = document.getElementById('educationList');
+    var html = [];
 
-    edus.forEach(e => {
-      container.innerHTML += `
-        <div class="item-card" data-id="${e.id}">
-          <div class="item-card-header">
-            <h3>${esc(e.title)}</h3>
-            <span class="item-badge">${esc(e.date_range)}</span>
-          </div>
-          <div class="form-row">
-            <div class="form-field"><label>Période / Établissement</label><input type="text" value="${esc(e.date_range)}" data-field="date_range"></div>
-            <div class="form-field"><label>Ordre</label><input type="number" value="${e.sort_order}" data-field="sort_order" style="width:80px"></div>
-          </div>
-          <div class="form-field"><label>Diplôme</label><input type="text" value="${esc(e.title)}" data-field="title"></div>
-          <div class="form-field"><label>École</label><input type="text" value="${esc(e.school)}" data-field="school"></div>
-          <div class="form-field"><label>Description</label><textarea data-field="description" rows="2">${esc(e.description)}</textarea></div>
-          <div class="item-card-actions">
-            <button class="btn-item-save" onclick="AdminDashboard.saveEducation(${e.id})">Sauvegarder</button>
-            <button class="btn-item-delete" onclick="AdminDashboard.deleteEducation(${e.id})">Supprimer</button>
-          </div>
-        </div>`;
+    edus.forEach(function (e) {
+      html.push(
+        '<div class="item-card" data-id="' + e.id + '">' +
+          '<div class="item-card-header"><h3>' + esc(e.title) + '</h3><span class="item-badge">' + esc(e.date_range) + '</span></div>' +
+          '<div class="form-row">' +
+            '<div class="form-field"><label>Période</label><input type="text" data-field="date_range"></div>' +
+            '<div class="form-field"><label>Ordre</label><input type="number" data-field="sort_order" style="width:80px"></div>' +
+          '</div>' +
+          '<div class="form-field"><label>Diplôme</label><input type="text" data-field="title"></div>' +
+          '<div class="form-field"><label>École</label><input type="text" data-field="school"></div>' +
+          '<div class="form-field"><label>Description</label><textarea data-field="description" rows="2"></textarea></div>' +
+          '<div class="item-card-actions">' +
+            '<button class="btn-item-save" onclick="AdminDashboard.saveEducation(' + e.id + ')">Sauvegarder</button>' +
+            '<button class="btn-item-delete" onclick="AdminDashboard.deleteEducation(' + e.id + ')">Supprimer</button>' +
+          '</div>' +
+        '</div>'
+      );
+    });
+
+    container.innerHTML = html.join('');
+
+    edus.forEach(function (e) {
+      var card = container.querySelector('[data-id="' + e.id + '"]');
+      if (!card) return;
+      setField(card, 'date_range', e.date_range);
+      setField(card, 'sort_order', e.sort_order);
+      setField(card, 'title', e.title);
+      setField(card, 'school', e.school);
+      setField(card, 'description', e.description);
     });
   }
 
   async function saveEducation(id) {
-    const card = document.querySelector(`.item-card[data-id="${id}"]`);
-    if (!card) return;
-    const data = {};
-    card.querySelectorAll('[data-field]').forEach(el => {
-      const f = el.getAttribute('data-field');
-      data[f] = f === 'sort_order' ? (parseInt(el.value) || 0) : el.value;
-    });
-    PortfolioDB.updateEducation(id, data);
-    await PortfolioDB.persist();
-    toast('Formation sauvegardée !', 'success');
-    loadEducation();
+    await safeRun(async function () {
+      var card = document.querySelector('.item-card[data-id="' + id + '"]');
+      if (!card) throw new Error('Carte introuvable');
+      var data = {};
+      card.querySelectorAll('[data-field]').forEach(function (el) {
+        var f = el.getAttribute('data-field');
+        data[f] = f === 'sort_order' ? (parseInt(el.value) || 0) : el.value;
+      });
+      PortfolioDB.updateEducation(id, data);
+      await PortfolioDB.persist();
+      toast('Formation sauvegardée !', 'success');
+      loadEducation();
+    }, 'Erreur sauvegarde formation');
   }
 
   async function deleteEducation(id) {
     if (!confirm('Supprimer cette formation ?')) return;
-    PortfolioDB.deleteById('education', id);
-    await PortfolioDB.persist();
-    toast('Formation supprimée', 'info');
-    loadEducation();
+    await safeRun(async function () {
+      PortfolioDB.deleteById('education', id);
+      await PortfolioDB.persist();
+      toast('Formation supprimée', 'info');
+      loadEducation();
+    }, 'Erreur suppression formation');
   }
 
   async function addEducation() {
-    PortfolioDB.insertEducation({ date_range: 'Date', title: 'Nouveau Diplôme', school: '', description: '', sort_order: 99 });
-    await PortfolioDB.persist();
-    toast('Formation ajoutée', 'success');
-    loadEducation();
+    await safeRun(async function () {
+      PortfolioDB.insertEducation({ date_range: 'Date', title: 'Nouveau Diplôme', school: '', description: '', sort_order: 99 });
+      await PortfolioDB.persist();
+      toast('Formation ajoutée', 'success');
+      loadEducation();
+    }, 'Erreur ajout formation');
   }
 
   // ===================================
   // CERTIFICATIONS
   // ===================================
   function loadCertifications() {
-    const certs = PortfolioDB.getAll('certifications');
-    const container = document.getElementById('certificationsList');
-    container.innerHTML = '';
+    var certs = PortfolioDB.getAll('certifications');
+    var container = document.getElementById('certificationsList');
+    var html = [];
 
-    certs.forEach(c => {
-      container.innerHTML += `
-        <div class="item-card" data-id="${c.id}">
-          <div class="form-row" style="align-items:end;">
-            <div class="form-field" style="flex:1;"><label>Certification</label><input type="text" value="${esc(c.name)}" data-field="name"></div>
-            <div class="form-field" style="width:80px;"><label>Ordre</label><input type="number" value="${c.sort_order}" data-field="sort_order"></div>
-          </div>
-          <div class="item-card-actions">
-            <button class="btn-item-save" onclick="AdminDashboard.saveCertification(${c.id})">Sauvegarder</button>
-            <button class="btn-item-delete" onclick="AdminDashboard.deleteCertification(${c.id})">Supprimer</button>
-          </div>
-        </div>`;
+    certs.forEach(function (c) {
+      html.push(
+        '<div class="item-card" data-id="' + c.id + '">' +
+          '<div class="form-row" style="align-items:end;">' +
+            '<div class="form-field" style="flex:1;"><label>Certification</label><input type="text" data-field="name"></div>' +
+            '<div class="form-field" style="width:80px;"><label>Ordre</label><input type="number" data-field="sort_order"></div>' +
+          '</div>' +
+          '<div class="item-card-actions">' +
+            '<button class="btn-item-save" onclick="AdminDashboard.saveCertification(' + c.id + ')">Sauvegarder</button>' +
+            '<button class="btn-item-delete" onclick="AdminDashboard.deleteCertification(' + c.id + ')">Supprimer</button>' +
+          '</div>' +
+        '</div>'
+      );
+    });
+
+    container.innerHTML = html.join('');
+
+    certs.forEach(function (c) {
+      var card = container.querySelector('[data-id="' + c.id + '"]');
+      if (!card) return;
+      setField(card, 'name', c.name);
+      setField(card, 'sort_order', c.sort_order);
     });
   }
 
   async function saveCertification(id) {
-    const card = document.querySelector(`.item-card[data-id="${id}"]`);
-    if (!card) return;
-    const name = card.querySelector('[data-field="name"]').value;
-    const sort_order = parseInt(card.querySelector('[data-field="sort_order"]').value) || 0;
-    PortfolioDB.updateCertification(id, { name, sort_order });
-    await PortfolioDB.persist();
-    toast('Certification sauvegardée !', 'success');
-    loadCertifications();
+    await safeRun(async function () {
+      var card = document.querySelector('.item-card[data-id="' + id + '"]');
+      if (!card) throw new Error('Carte introuvable');
+      var name = card.querySelector('[data-field="name"]').value;
+      var sort_order = parseInt(card.querySelector('[data-field="sort_order"]').value) || 0;
+      PortfolioDB.updateCertification(id, { name: name, sort_order: sort_order });
+      await PortfolioDB.persist();
+      toast('Certification sauvegardée !', 'success');
+      loadCertifications();
+    }, 'Erreur sauvegarde certification');
   }
 
   async function deleteCertification(id) {
     if (!confirm('Supprimer cette certification ?')) return;
-    PortfolioDB.deleteById('certifications', id);
-    await PortfolioDB.persist();
-    toast('Certification supprimée', 'info');
-    loadCertifications();
+    await safeRun(async function () {
+      PortfolioDB.deleteById('certifications', id);
+      await PortfolioDB.persist();
+      toast('Certification supprimée', 'info');
+      loadCertifications();
+    }, 'Erreur suppression certification');
   }
 
   async function addCertification() {
-    PortfolioDB.insertCertification({ name: 'Nouvelle certification', sort_order: 99 });
-    await PortfolioDB.persist();
-    toast('Certification ajoutée', 'success');
-    loadCertifications();
+    await safeRun(async function () {
+      PortfolioDB.insertCertification({ name: 'Nouvelle certification', sort_order: 99 });
+      await PortfolioDB.persist();
+      toast('Certification ajoutée', 'success');
+      loadCertifications();
+    }, 'Erreur ajout certification');
   }
 
   // ===================================
   // CONTACT
   // ===================================
   function loadContact() {
-    const s = PortfolioDB.getAllSettings();
+    var s = PortfolioDB.getAllSettings();
     document.getElementById('contactEmail').value = s.contact_email || '';
     document.getElementById('contactPhone1').value = s.contact_phone1 || '';
     document.getElementById('contactPhone2').value = s.contact_phone2 || '';
@@ -566,64 +684,73 @@ const AdminDashboard = (function () {
   }
 
   async function saveContact() {
-    PortfolioDB.setSetting('contact_email', document.getElementById('contactEmail').value);
-    PortfolioDB.setSetting('contact_phone1', document.getElementById('contactPhone1').value);
-    PortfolioDB.setSetting('contact_phone2', document.getElementById('contactPhone2').value);
-    PortfolioDB.setSetting('contact_location', document.getElementById('contactLocation').value);
-    PortfolioDB.setSetting('footer_description', document.getElementById('footerDescription').value);
-    await PortfolioDB.persist();
-    toast('Contact sauvegardé !', 'success');
+    await safeRun(async function () {
+      PortfolioDB.setSetting('contact_email', document.getElementById('contactEmail').value);
+      PortfolioDB.setSetting('contact_phone1', document.getElementById('contactPhone1').value);
+      PortfolioDB.setSetting('contact_phone2', document.getElementById('contactPhone2').value);
+      PortfolioDB.setSetting('contact_location', document.getElementById('contactLocation').value);
+      PortfolioDB.setSetting('footer_description', document.getElementById('footerDescription').value);
+      await PortfolioDB.persist();
+      toast('Contact sauvegardé !', 'success');
+    }, 'Erreur sauvegarde contact');
   }
 
   // ===================================
   // DATA MANAGEMENT
   // ===================================
   function loadDataInfo() {
-    const info = {
-      projects: PortfolioDB.getAll('projects').length,
-      skill_categories: PortfolioDB.getAll('skill_categories').length,
-      skills: PortfolioDB.getAll('skills').length,
-      experiences: PortfolioDB.getAll('experiences').length,
-      education: PortfolioDB.getAll('education').length,
-      certifications: PortfolioDB.getAll('certifications').length,
-      settings: Object.keys(PortfolioDB.getAllSettings()).length
-    };
-    document.getElementById('dbInfo').textContent =
-      `Base de données SQLite (sql.js / WASM)\n` +
-      `Stockage: IndexedDB + localStorage sync\n\n` +
-      `Projets: ${info.projects}\n` +
-      `Catégories compétences: ${info.skill_categories}\n` +
-      `Compétences: ${info.skills}\n` +
-      `Expériences: ${info.experiences}\n` +
-      `Formations: ${info.education}\n` +
-      `Certifications: ${info.certifications}\n` +
-      `Paramètres: ${info.settings}`;
+    try {
+      var info = {
+        projects: PortfolioDB.getAll('projects').length,
+        skill_categories: PortfolioDB.getAll('skill_categories').length,
+        skills: PortfolioDB.getAll('skills').length,
+        experiences: PortfolioDB.getAll('experiences').length,
+        education: PortfolioDB.getAll('education').length,
+        certifications: PortfolioDB.getAll('certifications').length,
+        settings: Object.keys(PortfolioDB.getAllSettings()).length
+      };
+      document.getElementById('dbInfo').textContent =
+        'Base de données SQLite (sql.js / WASM)\n' +
+        'Stockage: IndexedDB + localStorage sync\n\n' +
+        'Projets: ' + info.projects + '\n' +
+        'Catégories compétences: ' + info.skill_categories + '\n' +
+        'Compétences: ' + info.skills + '\n' +
+        'Expériences: ' + info.experiences + '\n' +
+        'Formations: ' + info.education + '\n' +
+        'Certifications: ' + info.certifications + '\n' +
+        'Paramètres: ' + info.settings + '\n' +
+        'DB Ready: ' + dbReady;
+    } catch (err) {
+      document.getElementById('dbInfo').textContent = 'Erreur: ' + err.message;
+    }
   }
 
   function exportData() {
-    const json = PortfolioDB.exportJSON();
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `portfolio_data_${new Date().toISOString().slice(0,10)}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-    toast('Données exportées !', 'success');
+    try {
+      var json = PortfolioDB.exportJSON();
+      var blob = new Blob([json], { type: 'application/json' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'portfolio_data_' + new Date().toISOString().slice(0,10) + '.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      toast('Données exportées !', 'success');
+    } catch (err) { toast('Erreur export: ' + err.message, 'error'); }
   }
 
   function initImport() {
-    document.getElementById('importFile').addEventListener('change', async (e) => {
-      const file = e.target.files[0];
+    document.getElementById('importFile').addEventListener('change', async function (e) {
+      var file = e.target.files[0];
       if (!file) return;
       try {
-        const text = await file.text();
+        var text = await file.text();
         PortfolioDB.importJSON(text);
         await PortfolioDB.persist();
         toast('Données importées avec succès !', 'success');
         loadCurrentSection();
       } catch (err) {
-        toast('Erreur d\'import: ' + err.message, 'error');
+        toast('Erreur import: ' + err.message, 'error');
       }
       e.target.value = '';
     });
@@ -631,14 +758,18 @@ const AdminDashboard = (function () {
 
   async function resetData() {
     if (!confirm('Réinitialiser TOUTES les données ? Cette action est irréversible.')) return;
-    await PortfolioDB.resetDatabase();
-    toast('Données réinitialisées', 'info');
-    loadCurrentSection();
+    await safeRun(async function () {
+      await PortfolioDB.resetDatabase();
+      toast('Données réinitialisées', 'info');
+      loadCurrentSection();
+    }, 'Erreur réinitialisation');
   }
 
   async function syncData() {
-    PortfolioDB.syncToLocalStorage();
-    toast('Données synchronisées vers le site public !', 'success');
+    try {
+      PortfolioDB.syncToLocalStorage();
+      toast('Données synchronisées vers le site public !', 'success');
+    } catch (err) { toast('Erreur sync: ' + err.message, 'error'); }
   }
 
   // ===================================
@@ -648,70 +779,57 @@ const AdminDashboard = (function () {
     maxW = maxW || 800;
     maxH = maxH || 600;
     quality = quality || 0.75;
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const img = new Image();
-        img.onload = () => {
-          let w = img.width, h = img.height;
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function (ev) {
+        var img = new Image();
+        img.onload = function () {
+          var w = img.width, h = img.height;
           if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
           if (h > maxH) { w = Math.round(w * maxH / h); h = maxH; }
-          const canvas = document.createElement('canvas');
+          var canvas = document.createElement('canvas');
           canvas.width = w;
           canvas.height = h;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, w, h);
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
           resolve(canvas.toDataURL('image/jpeg', quality));
         };
-        img.onerror = reject;
+        img.onerror = function () { reject(new Error('Image invalide')); };
         img.src = ev.target.result;
       };
-      reader.onerror = reject;
+      reader.onerror = function () { reject(new Error('Lecture fichier échouée')); };
       reader.readAsDataURL(file);
     });
   }
 
-  function handleImageUpload(inputEl, previewEl, urlInputEl) {
-    inputEl.addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      if (!file.type.startsWith('image/')) { toast('Fichier non valide', 'error'); return; }
-      if (file.size > 5 * 1024 * 1024) { toast('Image trop volumineuse (max 5 Mo)', 'error'); return; }
-      try {
-        const dataUrl = await compressImage(file);
-        if (previewEl) { previewEl.src = dataUrl; previewEl.style.display = 'block'; }
-        if (urlInputEl) urlInputEl.value = dataUrl;
-        toast('Image chargée !', 'success');
-      } catch (err) { toast('Erreur de chargement image', 'error'); }
-    });
-  }
-
   function initImageUploads() {
-    document.addEventListener('click', (e) => {
-      const btn = e.target.closest('.btn-upload-img');
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('.btn-upload-img');
       if (!btn) return;
-      const zone = btn.closest('.image-upload-zone') || btn.closest('.hero-photo-upload');
+      var zone = btn.closest('.image-upload-zone') || btn.closest('.hero-photo-upload');
       if (!zone) return;
-      const fileInput = zone.querySelector('.img-file-input');
+      var fileInput = zone.querySelector('.img-file-input');
       if (fileInput) fileInput.click();
     });
 
-    document.addEventListener('change', async (e) => {
+    document.addEventListener('change', async function (e) {
       if (!e.target.classList.contains('img-file-input')) return;
-      const file = e.target.files[0];
+      var file = e.target.files[0];
       if (!file) return;
       if (!file.type.startsWith('image/')) { toast('Fichier non valide', 'error'); return; }
       if (file.size > 5 * 1024 * 1024) { toast('Max 5 Mo', 'error'); return; }
-      const zone = e.target.closest('.image-upload-zone') || e.target.closest('.hero-photo-upload');
+      var zone = e.target.closest('.image-upload-zone') || e.target.closest('.hero-photo-upload');
       if (!zone) return;
-      const preview = zone.querySelector('.img-preview');
-      const urlInput = zone.querySelector('[data-field="image_url"]') || zone.querySelector('#heroPhoto');
+      var preview = zone.querySelector('.img-preview');
+      var urlInput = zone.querySelector('[data-field="image_url"]') || zone.querySelector('#heroPhoto');
       try {
-        const dataUrl = await compressImage(file);
+        var dataUrl = await compressImage(file);
         if (preview) { preview.src = dataUrl; preview.style.display = 'block'; }
         if (urlInput) urlInput.value = dataUrl;
-        toast('Image chargée ! Pensez à sauvegarder.', 'success');
-      } catch (err) { toast('Erreur compression image', 'error'); }
+        toast('Image chargée ! Cliquez Sauvegarder.', 'success');
+      } catch (err) {
+        console.error('[Admin] Image error:', err);
+        toast('Erreur image: ' + err.message, 'error');
+      }
       e.target.value = '';
     });
   }
@@ -721,17 +839,19 @@ const AdminDashboard = (function () {
   // ===================================
   function esc(str) {
     if (str === null || str === undefined) return '';
-    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    var d = document.createElement('div');
+    d.textContent = String(str);
+    return d.innerHTML;
   }
 
   function safeJSON(str, fallback) {
-    try { return JSON.parse(str || '[]'); } catch { return fallback; }
+    try { return JSON.parse(str || '[]'); } catch (e) { return fallback; }
   }
 
   // ===================================
   // INIT
   // ===================================
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', function () {
     initAuth();
     initImport();
     initImageUploads();
@@ -741,14 +861,14 @@ const AdminDashboard = (function () {
   // PUBLIC API
   // ===================================
   return {
-    saveHero, handleImageUpload,
-    loadProjects, saveProject, deleteProject, addProject,
-    loadSkills, saveSkillCategory, addSkillCategory, deleteSkillCategory, addSkill, deleteSkill,
-    loadExperiences, saveExperience, deleteExperience, addExperience,
-    loadEducation, saveEducation, deleteEducation, addEducation,
-    loadCertifications, saveCertification, deleteCertification, addCertification,
-    saveContact,
-    exportData, resetData, syncData
+    saveHero: saveHero,
+    loadProjects: loadProjects, saveProject: saveProject, deleteProject: deleteProject, addProject: addProject,
+    loadSkills: loadSkills, saveSkillCategory: saveSkillCategory, addSkillCategory: addSkillCategory, deleteSkillCategory: deleteSkillCategory, addSkill: addSkill, deleteSkill: deleteSkill,
+    loadExperiences: loadExperiences, saveExperience: saveExperience, deleteExperience: deleteExperience, addExperience: addExperience,
+    loadEducation: loadEducation, saveEducation: saveEducation, deleteEducation: deleteEducation, addEducation: addEducation,
+    loadCertifications: loadCertifications, saveCertification: saveCertification, deleteCertification: deleteCertification, addCertification: addCertification,
+    saveContact: saveContact,
+    exportData: exportData, resetData: resetData, syncData: syncData
   };
 
 })();
