@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8" />
@@ -335,6 +335,7 @@
 </script>
 
 <!-- ── React + Babel (CDN) ──────────────────────────────────────────── -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.20.3/dist/xlsx.full.min.js"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
@@ -742,16 +743,99 @@ function SettingsPanel({ onReset, onLogout, toast }) {
     await VA.Auth.setPassword(n1); setCur(''); setN1(''); setN2(''); toast('Mot de passe mis à jour ✓');
   }
 
-  function exportData() {
-    const blob = new Blob([JSON.stringify({ content: VA.get(), messages: VA.getMessages() }, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'portfolio-backup-' + new Date().toISOString().slice(0, 10) + '.json';
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  function dl(content, filename, type) {
+    const blob = new Blob([content], { type });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = filename; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
   }
 
-  function importData(e) {
+  function exportData() {
+    dl(JSON.stringify({ content: VA.get(), messages: VA.getMessages() }, null, 2),
+      'portfolio-backup-' + new Date().toISOString().slice(0, 10) + '.json', 'application/json');
+  }
+
+  function exportExcel() {
+    if (!window.XLSX) { toast('Librairie Excel non chargee'); return; }
+    const c = VA.get(); const msgs = VA.getMessages();
+    const wb = window.XLSX.utils.book_new();
+    const hdr = (ws, cols) => { ws['!cols'] = cols.map(w => ({ wch: w })); };
+    const wsM = window.XLSX.utils.aoa_to_sheet([
+      ['Date', 'Nom', 'Email', 'Langue', 'Lu', 'Message'],
+      ...msgs.map(m => [new Date(m.date).toLocaleString('fr-FR'), m.name||'', m.email, (m.lang||'fr').toUpperCase(), m.read?'Oui':'Non', m.message])
+    ]);
+    hdr(wsM, [19,20,30,8,6,80]); window.XLSX.utils.book_append_sheet(wb, wsM, 'Messages');
+    const wsP = window.XLSX.utils.aoa_to_sheet([
+      ['Titre FR','Titre EN','Badge','Periode FR','Description FR','Tags','Liens'],
+      ...c.projects.map(p => [p.titleFr,p.titleEn,p.tagFr,p.periodFr,p.descFr,(p.tags||[]).join(', '),(p.links||[]).map(l=>l.url).join(' | ')])
+    ]);
+    hdr(wsP, [26,26,18,26,55,35,35]); window.XLSX.utils.book_append_sheet(wb, wsP, 'Projets');
+    const wsX = window.XLSX.utils.aoa_to_sheet([
+      ['Periode FR','Poste FR','Organisation','Description FR'],
+      ...c.experience.map(x => [x.dateFr,x.titleFr,x.org,x.descFr])
+    ]);
+    hdr(wsX, [22,28,30,60]); window.XLSX.utils.book_append_sheet(wb, wsX, 'Experiences');
+    const wsS = window.XLSX.utils.aoa_to_sheet([
+      ['Titre FR','Titre EN','Description FR','Technologies'],
+      ...c.skills.map(s => [s.titleFr,s.titleEn,s.descFr,(s.chips||[]).join(', ')])
+    ]);
+    hdr(wsS, [28,28,38,55]); window.XLSX.utils.book_append_sheet(wb, wsS, 'Competences');
+    const wsC = window.XLSX.utils.aoa_to_sheet([
+      ['Badge','Intitule FR','Intitule EN','Emetteur'],
+      ...c.certs.map(x => [x.badge,x.titleFr,x.titleEn,x.issuer])
+    ]);
+    hdr(wsC, [8,44,44,30]); window.XLSX.utils.book_append_sheet(wb, wsC, 'Certifications');
+    const wsSv = window.XLSX.utils.aoa_to_sheet([
+      ['Icone','Titre FR','Titre EN','Description FR','Description EN'],
+      ...c.services.map(s => [s.icon,s.titleFr,s.titleEn,s.descFr,s.descEn])
+    ]);
+    hdr(wsSv, [10,30,30,55,55]); window.XLSX.utils.book_append_sheet(wb, wsSv, 'Services');
+    const ct = c.contact;
+    const wsCt = window.XLSX.utils.aoa_to_sheet([
+      ['Champ','Valeur'],['Email',ct.email],['Telephone',ct.phoneDisplay],
+      ['LinkedIn URL',ct.linkedin],['LinkedIn affiche',ct.linkedinDisplay],
+      ['GitHub URL',ct.github],['GitHub affiche',ct.githubDisplay]
+    ]);
+    hdr(wsCt, [20,50]); window.XLSX.utils.book_append_sheet(wb, wsCt, 'Contact');
+    window.XLSX.writeFile(wb, 'portfolio-' + new Date().toISOString().slice(0,10) + '.xlsx');
+    toast('Export Excel telecharge');
+  }
+
+  function exportMarkdown() {
+    const c = VA.get(); const msgs = VA.getMessages();
+    const today = new Date().toLocaleDateString('fr-FR');
+    const esc = s => (s||'').replace(/\|/g, '\\|').replace(/\n/g,' ');
+    const md = [
+      '# Vianney Aka - Portfolio', '', '> Export du ' + today, '', '---', '',
+      '## Messages recus (' + msgs.length + ')', '',
+      '| Date | Nom | Email | Lu | Apercu |',
+      '|------|-----|-------|:--:|--------|',
+      ...msgs.map(m => '| ' + new Date(m.date).toLocaleString('fr-FR') + ' | ' + esc(m.name||'—') + ' | ' + esc(m.email) + ' | ' + (m.read?'✓':'○') + ' | ' + esc((m.message||'').slice(0,80)) + ((m.message||'').length>80?'…':'') + ' |'),
+      '', '---', '', '## Projets', '',
+      ...c.projects.flatMap(p => [
+        '### ' + p.titleFr, '', '**' + p.tagFr + '** · ' + p.periodFr, '',
+        p.descFr, '',
+        p.tags&&p.tags.length ? '**Stack :** ' + p.tags.join(' · ') : '',
+        p.links&&p.links.length ? p.links.map(l=>'['+l.labelFr+']('+l.url+')').join(' · ') : '',
+        ''
+      ]),
+      '---', '', '## Experiences', '',
+      ...c.experience.flatMap(x => ['### ' + x.titleFr, '**' + x.org + '** · ' + x.dateFr, '', x.descFr, '']),
+      '---', '', '## Certifications', '',
+      '| Badge | Intitule | Emetteur |', '|-------|----------|----------|',
+      ...c.certs.map(x => '| **' + x.badge + '** | ' + x.titleFr + ' | ' + x.issuer + ' |'),
+      '', '---', '', '## Competences', '',
+      ...c.skills.flatMap(s => ['### ' + s.titleFr, s.descFr, '', s.chips&&s.chips.length ? s.chips.map(ch=>''+ch+'').join(' · ') : '', '']),
+      '---', '', '## Contact', '',
+      '- **Email :** ' + c.contact.email,
+      '- **Tel :** ' + c.contact.phoneDisplay,
+      '- **LinkedIn :** [' + c.contact.linkedinDisplay + '](' + c.contact.linkedin + ')',
+      '- **GitHub :** [' + c.contact.githubDisplay + '](' + c.contact.github + ')',
+    ].join('\n');
+    dl(md, 'portfolio-' + new Date().toISOString().slice(0,10) + '.md', 'text/markdown');
+    toast('Export Markdown telecharge');
+  }
+
+    function importData(e) {
     const f = e.target.files[0]; if (!f) return;
     const r = new FileReader();
     r.onload = () => {
@@ -783,7 +867,9 @@ function SettingsPanel({ onReset, onLogout, toast }) {
         <div className="card-h"><h3>Sauvegarde des données</h3></div>
         <div className="hint">Le contenu et les messages sont stockés dans ce navigateur. Exportez régulièrement une sauvegarde.</div>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-          <button className="btn btn-ghost" onClick={exportData}>⬇ Exporter (JSON)</button>
+          <button className="btn btn-ghost" onClick={exportData}>⬇ JSON</button>
+          <button className="btn btn-ghost" onClick={exportExcel}>⬇ Excel (.xlsx)</button>
+          <button className="btn btn-ghost" onClick={exportMarkdown}>⬇ Markdown (.md)</button>
           <label className="btn btn-ghost" style={{ cursor: 'pointer' }}>⬆ Importer
             <input type="file" accept="application/json" style={{ display: 'none' }} onChange={importData} />
           </label>
