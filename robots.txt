@@ -1,29 +1,6 @@
-# robots.txt pour vianney-aka.github.io
-
-User-agent: *
+﻿User-agent: *
 Allow: /
-
-# Sitemap
-Sitemap: https://vianney-aka.github.io/sitemap.xml
-
-# Crawl-delay (optionnel, en secondes)
-Crawl-delay: 1
-
-# Disallow admin area
+Disallow: /admin/
 Disallow: /viak/
 
-# Allow specific bots
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Slurp
-Allow: /
-
-User-agent: DuckDuckBot
-Allow: /
-
-User-agent: Baiduspider
-Allow: /
+Sitemap: https://vianney-aka.github.io/sitemap.xml
