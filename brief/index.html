@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Démarrer un projet — Vianney Aka</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Manrope:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --accent:#13c06b; --accent-bright:#4ff0a0; --accent-deep:#02a753;
+  --bg:#07090a; --bg-2:#0b0f0e; --surface:#0e1413; --surface-2:#141c1a;
+  --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.15);
+  --text:#eaf2ee; --text-2:#9aa8a0; --text-3:#5f6d66;
+  --font-d:'Syne',system-ui,sans-serif;
+  --font-b:'Manrope',system-ui,sans-serif;
+  --font-m:'JetBrains Mono',monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --card-hover:rgba(19,192,107,.10);
+}
+[data-theme="light"]{
+  --bg:#f4f9f6; --bg-2:#eaf4ef; --surface:#ddeee5; --surface-2:#cfe6d9;
+  --line:rgba(0,0,0,.09); --line-2:rgba(0,0,0,.16);
+  --text:#0d1f15; --text-2:#3d5a47; --text-3:#7a9a85;
+  --card-hover:rgba(19,192,107,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-b);font-size:16px;-webkit-font-smoothing:antialiased;}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(700px 500px at 80% -5%,rgba(19,192,107,.12),transparent 60%),
+             radial-gradient(500px 400px at 10% 110%,rgba(19,192,107,.08),transparent 55%);}
+
+/* ── Layout ── */
+.page{position:relative;z-index:1;display:flex;flex-direction:column;height:100vh;}
+
+/* ── Header ── */
+.hd{display:flex;align-items:center;justify-content:space-between;padding:18px 32px;border-bottom:1px solid var(--line);flex-shrink:0;}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);}
+.brand svg{width:36px;height:36px;}
+.brand-t{font-family:var(--font-d);font-weight:600;font-size:16px;}
+.hd-meta{display:flex;align-items:center;gap:16px;}
+.step-label{font-family:var(--font-m);font-size:11px;color:var(--text-3);letter-spacing:.12em;text-transform:uppercase;}
+
+/* ── Progress bar ── */
+.prog-track{height:3px;background:var(--surface);flex-shrink:0;}
+.prog-bar{height:100%;background:var(--accent);width:0%;transition:width .5s var(--ease);}
+
+/* ── Steps area ── */
+.steps-wrap{flex:1;overflow:hidden;position:relative;}
+.step{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:24px 20px;
+  opacity:0;pointer-events:none;
+  transform:translateX(60px);
+  transition:opacity .4s var(--ease),transform .4s var(--ease);}
+.step.active{opacity:1;pointer-events:all;transform:translateX(0);}
+.step.out{opacity:0;transform:translateX(-60px);}
+
+/* ── Step content ── */
+.step-inner{width:100%;max-width:680px;}
+.step-num{font-family:var(--font-m);font-size:11px;color:var(--accent);letter-spacing:.2em;
+  text-transform:uppercase;margin-bottom:12px;}
+.step-q{font-family:var(--font-d);font-size:clamp(22px,4vw,34px);font-weight:700;
+  line-height:1.1;margin-bottom:8px;letter-spacing:-.02em;}
+.step-hint{color:var(--text-3);font-size:14px;margin-bottom:32px;line-height:1.5;}
+
+/* ── Card grid (multiple choice) ── */
+.cards{display:grid;gap:12px;}
+.cards.col2{grid-template-columns:repeat(2,1fr);}
+.cards.col3{grid-template-columns:repeat(3,1fr);}
+.card{background:var(--surface);border:1px solid var(--line-2);border-radius:16px;
+  padding:18px 20px;cursor:pointer;display:flex;align-items:center;gap:14px;
+  transition:border-color .2s,background .2s,transform .15s;user-select:none;}
+.card:hover{border-color:var(--accent);background:var(--card-hover);transform:translateY(-1px);}
+.card.selected{border-color:var(--accent);background:rgba(19,192,107,.14);
+  box-shadow:0 0 0 1px var(--accent);}
+.card-ico{font-size:24px;flex-shrink:0;width:36px;text-align:center;}
+.card-body{flex:1;min-width:0;}
+.card-title{font-weight:600;font-size:15px;line-height:1.2;}
+.card-sub{font-size:12.5px;color:var(--text-3);margin-top:3px;line-height:1.3;}
+
+/* ── Text input step ── */
+.step-input{width:100%;background:transparent;border:0;border-bottom:2px solid var(--line-2);
+  color:var(--text);font-family:var(--font-b);font-size:clamp(18px,3vw,26px);
+  padding:14px 0;outline:none;transition:border-color .2s;resize:none;
+  line-height:1.4;}
+.step-input:focus{border-color:var(--accent);}
+.step-input::placeholder{color:var(--text-3);}
+
+/* ── Dual input ── */
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.field-wrap{display:flex;flex-direction:column;gap:8px;}
+.field-label{font-family:var(--font-m);font-size:11px;color:var(--text-2);
+  letter-spacing:.12em;text-transform:uppercase;}
+.field-input{background:var(--surface);border:1px solid var(--line-2);border-radius:10px;
+  padding:13px 16px;color:var(--text);font-family:var(--font-b);font-size:15px;
+  outline:none;transition:border-color .2s,box-shadow .2s;width:100%;}
+.field-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(19,192,107,.12);}
+.field-input::placeholder{color:var(--text-3);}
+
+/* ── Navigation ── */
+.step-nav{display:flex;align-items:center;justify-content:space-between;
+  margin-top:28px;gap:12px;}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:10px;
+  font-family:var(--font-b);font-weight:600;font-size:14px;cursor:pointer;
+  border:1px solid transparent;padding:11px 20px;transition:.2s;text-decoration:none;}
+.btn-primary{background:var(--accent);color:#04140c;}
+.btn-primary:hover{background:var(--accent-bright);}
+.btn-ghost{background:transparent;color:var(--text-2);border-color:var(--line-2);}
+.btn-ghost:hover{color:var(--text);border-color:var(--line-2);}
+.btn:disabled{opacity:.35;cursor:not-allowed;}
+.btn-icon{width:44px;height:44px;padding:0;justify-content:center;border-radius:50%;}
+.key-hint{font-family:var(--font-m);font-size:11px;color:var(--text-3);
+  display:flex;align-items:center;gap:6px;}
+.kbd{border:1px solid var(--line-2);border-radius:5px;padding:2px 7px;font-size:10px;color:var(--text-3);}
+
+/* ── Summary (step final) ── */
+.summary{display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
+.summary-row{display:flex;gap:14px;background:var(--surface);border:1px solid var(--line);
+  border-radius:12px;padding:14px 16px;align-items:flex-start;}
+.summary-key{font-family:var(--font-m);font-size:11px;color:var(--text-3);
+  letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;min-width:120px;}
+.summary-val{font-size:14px;color:var(--text);line-height:1.4;}
+.summary-ico{font-size:18px;flex-shrink:0;width:28px;text-align:center;}
+
+/* ── Success ── */
+.success{text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px;}
+.success-ico{font-size:52px;}
+.success h2{font-family:var(--font-d);font-size:28px;font-weight:700;}
+.success p{color:var(--text-2);max-width:420px;line-height:1.6;}
+.success-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px;}
+
+/* ── Theme toggle ── */
+.theme-toggle{width:34px;height:34px;border-radius:50%;border:1px solid var(--line-2);
+  background:transparent;color:var(--text-2);cursor:pointer;display:grid;place-items:center;}
+.theme-toggle:hover{border-color:var(--accent);color:var(--accent);}
+.theme-toggle svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round;}
+.ico-sun{display:none;} .ico-moon{display:block;}
+[data-theme="light"] .ico-sun{display:block;} [data-theme="light"] .ico-moon{display:none;}
+
+/* ── Responsive ── */
+@media(max-width:600px){
+  .hd{padding:14px 16px;}
+  .step{padding:16px 16px;}
+  .cards.col2,.cards.col3{grid-template-columns:1fr;}
+  .fields{grid-template-columns:1fr;}
+  .card{padding:14px 16px;}
+  .card-ico{font-size:20px;width:28px;}
+  .step-nav{flex-wrap:wrap;}
+  .key-hint{display:none;}
+  .summary-key{min-width:90px;font-size:10px;}
+}
+@media(max-width:380px){
+  .brand-t{display:none;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <header class="hd">
+    <a href="../" class="brand">
+      <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="44" height="44" rx="10" fill="#0b1a13"/>
+        <path d="M22 12L30 32H27L22 18L17 32H14L22 12Z" fill="#13c06b"/>
+        <path d="M26 22H32L30 32H27L29 24H26V22Z" fill="#4ff0a0" opacity="0.7"/>
+      </svg>
+      <span class="brand-t">Vianney Aka</span>
+    </a>
+    <div class="hd-meta">
+      <span class="step-label" id="stepLabel">Étape 1 / 7</span>
+      <button class="theme-toggle" id="themeToggle" aria-label="Thème">
+        <svg class="ico-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="ico-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Progress -->
+  <div class="prog-track"><div class="prog-bar" id="progBar"></div></div>
+
+  <!-- Steps -->
+  <div class="steps-wrap" id="stepsWrap">
+
+    <!-- STEP 1 : Type de projet -->
+    <div class="step active" data-step="1">
+      <div class="step-inner">
+        <div class="step-num">01 — Type</div>
+        <h2 class="step-q">Quel type de projet souhaitez-vous créer ?</h2>
+        <p class="step-hint">Sélectionnez l'option qui correspond le mieux à votre idée.</p>
+        <div class="cards col2" data-key="type">
+          <div class="card" data-val="Site web vitrine">
+            <span class="card-ico">🌐</span>
+            <div class="card-body"><div class="card-title">Site vitrine</div><div class="card-sub">Présenter votre activité</div></div>
+          </div>
+          <div class="card" data-val="E-commerce / vente en ligne">
+            <span class="card-ico">🛒</span>
+            <div class="card-body"><div class="card-title">E-commerce</div><div class="card-sub">Vendre des produits ou services</div></div>
+          </div>
+          <div class="card" data-val="Application mobile">
+            <span class="card-ico">📱</span>
+            <div class="card-body"><div class="card-title">App mobile</div><div class="card-sub">iOS & Android</div></div>
+          </div>
+          <div class="card" data-val="Plateforme e-learning / LMS">
+            <span class="card-ico">🎓</span>
+            <div class="card-body"><div class="card-title">E-learning / LMS</div><div class="card-sub">Former & certifier en ligne</div></div>
+          </div>
+          <div class="card" data-val="Logiciel / outil métier">
+            <span class="card-ico">🗄️</span>
+            <div class="card-body"><div class="card-title">Logiciel métier</div><div class="card-sub">Outil interne ou SaaS</div></div>
+          </div>
+          <div class="card" data-val="Autre / Je ne sais pas encore">
+            <span class="card-ico">✨</span>
+            <div class="card-body"><div class="card-title">Autre / Je verrai</div><div class="card-sub">Dites-le moi et on définit</div></div>
+          </div>
+        </div>
+        <div class="step-nav">
+          <span class="key-hint"><span class="kbd">↵</span> pour continuer</span>
+          <button class="btn btn-primary" id="next1" disabled>Suivant →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2 : Qui êtes-vous -->
+    <div class="step" data-step="2">
+      <div class="step-inner">
+        <div class="step-num">02 — Profil</div>
+        <h2 class="step-q">Vous représentez…</h2>
+        <p class="step-hint">Votre profil m'aide à adapter mon approche.</p>
+        <div class="cards col2" data-key="profil">
+          <div class="card" data-val="Une entreprise">
+            <span class="card-ico">🏢</span>
+            <div class="card-body"><div class="card-title">Une entreprise</div></div>
+          </div>
+          <div class="card" data-val="Une startup">
+            <span class="card-ico">🚀</span>
+            <div class="card-body"><div class="card-title">Une startup</div></div>
+          </div>
+          <div class="card" data-val="Une association / ONG">
+            <span class="card-ico">🏛️</span>
+            <div class="card-body"><div class="card-title">Une association / ONG</div></div>
+          </div>
+          <div class="card" data-val="Moi-même (freelance / particulier)">
+            <span class="card-ico">👤</span>
+            <div class="card-body"><div class="card-title">Moi-même</div><div class="card-sub">Freelance / particulier</div></div>
+          </div>
+        </div>
+        <div class="step-nav">
+          <button class="btn btn-ghost" id="prev2">← Retour</button>
+          <button class="btn btn-primary" id="next2" disabled>Suivant →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3 : Situation -->
+    <div class="step" data-step="3">
+      <div class="step-inner">
+        <div class="step-num">03 — Situation</div>
+        <h2 class="step-q">Où en êtes-vous ?</h2>
+        <p class="step-hint">Une idée de votre point de départ m'aide à dimensionner le projet.</p>
+        <div class="cards" data-key="situation">
+          <div class="card" data-val="Idée à concrétiser — partir de zéro">
+            <span class="card-ico">💡</span>
+            <div class="card-body"><div class="card-title">J'ai une idée à concrétiser</div><div class="card-sub">On repart de zéro</div></div>
+          </div>
+          <div class="card" data-val="Refonte — site ou app existant à améliorer">
+            <span class="card-ico">🔄</span>
+            <div class="card-body"><div class="card-title">Refonte d'un existant</div><div class="card-sub">Mon site / app doit être revu</div></div>
+          </div>
+          <div class="card" data-val="Évolution — ajouter des fonctionnalités à un projet existant">
+            <span class="card-ico">📈</span>
+            <div class="card-body"><div class="card-title">Faire évoluer un projet</div><div class="card-sub">Ajouter des fonctionnalités</div></div>
+          </div>
+        </div>
+        <div class="step-nav">
+          <button class="btn btn-ghost" id="prev3">← Retour</button>
+          <button class="btn btn-primary" id="next3" disabled>Suivant →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4 : Budget -->
+    <div class="step" data-step="4">
+      <div class="step-inner">
+        <div class="step-num">04 — Budget</div>
+        <h2 class="step-q">Quel budget envisagez-vous ?</h2>
+        <p class="step-hint">Pas de jugement — ça permet de proposer une solution adaptée.</p>
+        <div class="cards col3" data-key="budget">
+          <div class="card" data-val="Moins de 500 €">
+            <div class="card-body"><div class="card-title">< 500 €</div><div class="card-sub">Landing page simple</div></div>
+          </div>
+          <div class="card" data-val="500 € – 2 000 €">
+            <div class="card-body"><div class="card-title">500 – 2 000 €</div><div class="card-sub">Site pro sur-mesure</div></div>
+          </div>
+          <div class="card" data-val="2 000 € – 5 000 €">
+            <div class="card-body"><div class="card-title">2 000 – 5 000 €</div><div class="card-sub">App ou plateforme</div></div>
+          </div>
+          <div class="card" data-val="5 000 € – 15 000 €">
+            <div class="card-body"><div class="card-title">5 000 – 15 000 €</div><div class="card-sub">Produit complet</div></div>
+          </div>
+          <div class="card" data-val="Plus de 15 000 €">
+            <div class="card-body"><div class="card-title">15 000 € +</div><div class="card-sub">Projet d'envergure</div></div>
+          </div>
+          <div class="card" data-val="À définir ensemble">
+            <div class="card-body"><div class="card-title">À discuter</div><div class="card-sub">On évalue ensemble</div></div>
+          </div>
+        </div>
+        <div class="step-nav">
+          <button class="btn btn-ghost" id="prev4">← Retour</button>
+          <button class="btn btn-primary" id="next4" disabled>Suivant →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5 : Délai -->
+    <div class="step" data-step="5">
+      <div class="step-inner">
+        <div class="step-num">05 — Délai</div>
+        <h2 class="step-q">Quand souhaitez-vous démarrer ?</h2>
+        <p class="step-hint">Je m'adapte à votre rythme.</p>
+        <div class="cards col2" data-key="delai">
+          <div class="card" data-val="Dès maintenant (urgent)">
+            <span class="card-ico">🔥</span>
+            <div class="card-body"><div class="card-title">Dès maintenant</div><div class="card-sub">C'est urgent</div></div>
+          </div>
+          <div class="card" data-val="Dans 1 à 3 mois">
+            <span class="card-ico">📅</span>
+            <div class="card-body"><div class="card-title">1 – 3 mois</div><div class="card-sub">Bientôt</div></div>
+          </div>
+          <div class="card" data-val="Dans 3 à 6 mois">
+            <span class="card-ico">🗓️</span>
+            <div class="card-body"><div class="card-title">3 – 6 mois</div><div class="card-sub">Pas encore urgent</div></div>
+          </div>
+          <div class="card" data-val="Je n'ai pas encore décidé">
+            <span class="card-ico">⏳</span>
+            <div class="card-body"><div class="card-title">Pas encore décidé</div><div class="card-sub">J'explore mes options</div></div>
+          </div>
+        </div>
+        <div class="step-nav">
+          <button class="btn btn-ghost" id="prev5">← Retour</button>
+          <button class="btn btn-primary" id="next5" disabled>Suivant →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6 : Description libre -->
+    <div class="step" data-step="6">
+      <div class="step-inner">
+        <div class="step-num">06 — Projet</div>
+        <h2 class="step-q">Décrivez votre projet en 2–3 phrases.</h2>
+        <p class="step-hint">Dites ce que vous voulez faire, pour qui et pourquoi. Pas besoin d'être technique.</p>
+        <textarea class="step-input" id="description" rows="4"
+          placeholder="Ex : Je veux créer une app mobile pour connecter des familles avec des nounous à proximité, avec paiement intégré et messagerie..."></textarea>
+        <div class="step-nav">
+          <button class="btn btn-ghost" id="prev6">← Retour</button>
+          <span class="key-hint"><span class="kbd">↵</span><span class="kbd">↵</span> pour continuer</span>
+          <button class="btn btn-primary" id="next6" disabled>Suivant →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 7 : Coordonnées -->
+    <div class="step" data-step="7">
+      <div class="step-inner">
+        <div class="step-num">07 — Contact</div>
+        <h2 class="step-q">Comment vous joindre ?</h2>
+        <p class="step-hint">Juste l'essentiel — je vous réponds sous 24h.</p>
+        <div class="fields">
+          <div class="field-wrap">
+            <label class="field-label" for="prenom">Prénom</label>
+            <input class="field-input" id="prenom" type="text" placeholder="Marie" autocomplete="given-name" />
+          </div>
+          <div class="field-wrap">
+            <label class="field-label" for="email">Email</label>
+            <input class="field-input" id="email" type="email" placeholder="marie@exemple.com" autocomplete="email" />
+          </div>
+        </div>
+        <div class="step-nav" style="margin-top:28px;">
+          <button class="btn btn-ghost" id="prev7">← Retour</button>
+          <button class="btn btn-primary" id="next7" disabled>Voir le récap →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 8 : Récapitulatif -->
+    <div class="step" data-step="8">
+      <div class="step-inner" style="max-width:700px;">
+        <div class="step-num">Récapitulatif</div>
+        <h2 class="step-q" style="margin-bottom:24px;">Votre brief en un coup d'œil</h2>
+        <div class="summary" id="summary"></div>
+        <div class="step-nav">
+          <button class="btn btn-ghost" id="prev8">← Modifier</button>
+          <button class="btn btn-primary" id="submitBtn">Envoyer mon brief 🚀</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 9 : Succès -->
+    <div class="step" data-step="9">
+      <div class="step-inner">
+        <div class="success">
+          <div class="success-ico">🎉</div>
+          <h2>Brief envoyé !</h2>
+          <p>Merci <strong id="successName"></strong>. J'ai bien reçu votre projet et je vous reviens dans les <strong>24h</strong> avec une première analyse et une proposition.</p>
+          <div class="success-actions">
+            <a href="../" class="btn btn-primary">← Retour au portfolio</a>
+            <a href="#" class="btn btn-ghost" id="mailtoLink">Envoyer aussi par email</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /steps-wrap -->
+</div><!-- /page -->
+
+<!-- content-data.js optionnel pour sauvegarder dans l'admin -->
+<script src="../content-data.js" onerror="void 0"></script>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ── State ── */
+  const answers = { type:'', profil:'', situation:'', budget:'', delai:'', description:'', prenom:'', email:'' };
+  const TOTAL = 7;
+  let current = 1;
+
+  /* ── Theme ── */
+  const saved = localStorage.getItem('va_theme') || (matchMedia('(prefers-color-scheme:light)').matches ? 'light' : 'dark');
+  document.documentElement.setAttribute('data-theme', saved);
+  document.getElementById('themeToggle').addEventListener('click', function(){
+    const n = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', n);
+    localStorage.setItem('va_theme', n);
+  });
+
+  /* ── Helpers ── */
+  function getStep(n){ return document.querySelector('[data-step="'+n+'"]'); }
+  function goTo(n){
+    const cur = getStep(current);
+    cur.classList.remove('active');
+    cur.classList.add('out');
+    setTimeout(function(){ cur.classList.remove('out'); }, 400);
+    current = n;
+    const nxt = getStep(n);
+    nxt.classList.add('active');
+    // progress (sur 7 vraies étapes)
+    const pct = Math.min(100, ((n-1) / TOTAL) * 100);
+    document.getElementById('progBar').style.width = pct + '%';
+    document.getElementById('stepLabel').textContent = n <= TOTAL ? 'Étape '+n+' / '+TOTAL : 'Récapitulatif';
+    // focus premier input
+    const inp = nxt.querySelector('input,textarea');
+    if(inp) setTimeout(function(){ inp.focus(); }, 420);
+  }
+
+  /* ── Card selection (multiple choice) ── */
+  document.querySelectorAll('.cards').forEach(function(grid){
+    const key = grid.getAttribute('data-key');
+    const step = parseInt(grid.closest('.step').getAttribute('data-step'));
+    const nextBtn = document.getElementById('next'+step);
+    grid.querySelectorAll('.card').forEach(function(card){
+      card.addEventListener('click', function(){
+        grid.querySelectorAll('.card').forEach(function(c){ c.classList.remove('selected'); });
+        card.classList.add('selected');
+        answers[key] = card.getAttribute('data-val');
+        if(nextBtn) nextBtn.disabled = false;
+        // Auto-advance after short delay
+        setTimeout(function(){ if(nextBtn && !nextBtn.disabled) nextBtn.click(); }, 260);
+      });
+    });
+  });
+
+  /* ── Step 1 ── */
+  document.getElementById('next1').addEventListener('click', function(){ if(answers.type) goTo(2); });
+
+  /* ── Step 2 ── */
+  document.getElementById('prev2').addEventListener('click', function(){ goTo(1); });
+  document.getElementById('next2').addEventListener('click', function(){ if(answers.profil) goTo(3); });
+
+  /* ── Step 3 ── */
+  document.getElementById('prev3').addEventListener('click', function(){ goTo(2); });
+  document.getElementById('next3').addEventListener('click', function(){ if(answers.situation) goTo(4); });
+
+  /* ── Step 4 ── */
+  document.getElementById('prev4').addEventListener('click', function(){ goTo(3); });
+  document.getElementById('next4').addEventListener('click', function(){ if(answers.budget) goTo(5); });
+
+  /* ── Step 5 ── */
+  document.getElementById('prev5').addEventListener('click', function(){ goTo(4); });
+  document.getElementById('next5').addEventListener('click', function(){ if(answers.delai) goTo(6); });
+
+  /* ── Step 6 : textarea ── */
+  var descEl = document.getElementById('description');
+  var next6 = document.getElementById('next6');
+  descEl.addEventListener('input', function(){
+    answers.description = descEl.value.trim();
+    next6.disabled = answers.description.length < 10;
+  });
+  document.getElementById('prev6').addEventListener('click', function(){ goTo(5); });
+  next6.addEventListener('click', function(){ if(answers.description.length >= 10) goTo(7); });
+
+  /* ── Step 7 : coordonnées ── */
+  var prenomEl = document.getElementById('prenom');
+  var emailEl  = document.getElementById('email');
+  var next7    = document.getElementById('next7');
+  function checkContact(){
+    answers.prenom = prenomEl.value.trim();
+    answers.email  = emailEl.value.trim();
+    next7.disabled = !(answers.prenom.length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(answers.email));
+  }
+  prenomEl.addEventListener('input', checkContact);
+  emailEl.addEventListener('input', checkContact);
+  emailEl.addEventListener('keydown', function(e){ if(e.key==='Enter' && !next7.disabled) next7.click(); });
+  document.getElementById('prev7').addEventListener('click', function(){ goTo(6); });
+  next7.addEventListener('click', function(){ buildSummary(); goTo(8); });
+
+  /* ── Step 8 : récapitulatif ── */
+  function buildSummary(){
+    var rows = [
+      { ico:'🌐', key:'Projet',    val: answers.type       },
+      { ico:'👤', key:'Profil',    val: answers.profil     },
+      { ico:'📍', key:'Situation', val: answers.situation  },
+      { ico:'💰', key:'Budget',    val: answers.budget     },
+      { ico:'📅', key:'Délai',     val: answers.delai      },
+      { ico:'📝', key:'Description', val: answers.description },
+      { ico:'✉️', key:'Contact',   val: answers.prenom + ' — ' + answers.email }
+    ];
+    document.getElementById('summary').innerHTML = rows.map(function(r){
+      return '<div class="summary-row"><span class="summary-ico">'+r.ico+'</span><span class="summary-key">'+r.key+'</span><span class="summary-val">'+escHtml(r.val)+'</span></div>';
+    }).join('');
+  }
+  function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  document.getElementById('prev8').addEventListener('click', function(){ goTo(7); });
+
+  /* ── Submit ── */
+  document.getElementById('submitBtn').addEventListener('click', function(){
+    var msg = buildMessage();
+    // Sauvegarder dans l'admin si VAContent est dispo
+    try{
+      if(window.VAContent && window.VAContent.addMessage){
+        window.VAContent.addMessage({ name: answers.prenom, email: answers.email, message: msg, lang: 'fr' });
+      }
+    } catch(e){}
+    // Préparer mailto de secours
+    var subject = encodeURIComponent('[Brief Projet] ' + answers.type + ' — ' + answers.prenom);
+    var body = encodeURIComponent(msg);
+    document.getElementById('mailtoLink').href = 'mailto:aka.vianney@ik.me?subject='+subject+'&body='+body;
+    document.getElementById('successName').textContent = answers.prenom;
+    goTo(9);
+    document.getElementById('stepLabel').textContent = 'Envoyé ✓';
+    document.getElementById('progBar').style.width = '100%';
+  });
+
+  function buildMessage(){
+    return [
+      '📋 BRIEF PROJET',
+      '─────────────────────',
+      '🌐 Type de projet : ' + answers.type,
+      '👤 Profil : ' + answers.profil,
+      '📍 Situation : ' + answers.situation,
+      '💰 Budget : ' + answers.budget,
+      '📅 Délai : ' + answers.delai,
+      '',
+      '📝 Description du projet :',
+      answers.description,
+      '',
+      '✉️ Contact : ' + answers.prenom + ' <' + answers.email + '>',
+    ].join('\n');
+  }
+
+  /* ── Keyboard navigation ── */
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'Enter') return;
+    var activeStep = document.querySelector('.step.active');
+    if(!activeStep) return;
+    var n = parseInt(activeStep.getAttribute('data-step'));
+    if(n >= 1 && n <= 5){
+      var btn = document.getElementById('next'+n);
+      if(btn && !btn.disabled) btn.click();
+    }
+  });
+
+})();
+</script>
+</body>
+</html>
