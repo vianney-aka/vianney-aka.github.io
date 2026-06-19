@@ -1,4 +1,21 @@
-﻿/* ============================================================
+﻿/* ---- Theme toggle (dark / light) ---- */
+(function(){
+  var KEY = 'va_theme';
+  var saved = localStorage.getItem(KEY) || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  document.documentElement.setAttribute('data-theme', saved);
+  document.addEventListener('DOMContentLoaded', function(){
+    var btn = document.getElementById('themeToggle');
+    if (!btn) return;
+    btn.addEventListener('click', function(){
+      var cur = document.documentElement.getAttribute('data-theme');
+      var next = cur === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem(KEY, next);
+    });
+  });
+})();
+
+/* ============================================================
    VIANNEY AKA — portfolio.js
    Rendu piloté par les données (VAContent) + i18n + animations.
    ============================================================ */
