@@ -1,749 +1,237 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="Vianney AKA - Développeur Full Stack & Administrateur LMS spécialisé en e-learning et projets à impact social. Expert Moodle, Laravel, Django avec 5+ ans d'expérience auprès de l'UNESCO, TechnoServe et TotalEnergies.">
-    <meta name="keywords" content="développeur full stack, e-learning, Moodle, Laravel, Django, WordPress, Angular, développeur Côte d'Ivoire, UNESCO, TotalEnergies, impact social, formation en ligne, LMS, plateforme e-learning, Abidjan, développeur web, PHP, Python, JavaScript">
-    <meta name="author" content="Aka Kouadio Bonnaventure Vianney">
-    <meta name="robots" content="index, follow">
-    <meta name="language" content="French">
-    <meta name="revisit-after" content="7 days">
-    <meta name="rating" content="general">
-    
-    <!-- Geo Tags -->
-    <meta name="geo.region" content="CI-AB">
-    <meta name="geo.placename" content="Abidjan">
-    <meta name="geo.position" content="5.316667;-4.033333">
-    <meta name="ICBM" content="5.316667, -4.033333">
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://vianney-aka.github.io/">
-    <meta property="og:site_name" content="Vianney AKA Portfolio">
-    <meta property="og:title" content="Vianney AKA - Développeur Full Stack & Administrateur LMS | Chef de Projet Digital">
-    <meta property="og:description" content="Expert en plateformes e-learning et solutions digitales à impact social. 5+ ans d'expérience avec UNESCO, TechnoServe, TotalEnergies. Spécialiste Moodle, Laravel, Django.">
-    <meta property="og:image" content="https://vianney-aka.github.io/assets/og-image.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:locale" content="fr_FR">
-    
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@vianney_aka">
-    <meta name="twitter:creator" content="@vianney_aka">
-    <meta name="twitter:url" content="https://vianney-aka.github.io/">
-    <meta name="twitter:title" content="Vianney AKA - Développeur Full Stack & Administrateur LMS | Chef de Projet Digital">
-    <meta name="twitter:description" content="Expert en plateformes e-learning et solutions digitales à impact social. 5+ ans d'expérience avec UNESCO, TechnoServe, TotalEnergies.">
-    <meta name="twitter:image" content="https://vianney-aka.github.io/assets/og-image.jpg">
-    
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://vianney-aka.github.io/">
-    
-    <!-- Alternate Languages -->
-    <link rel="alternate" hreflang="fr" href="https://vianney-aka.github.io/">
-    <link rel="alternate" hreflang="en" href="https://vianney-aka.github.io/en/">
-    <link rel="alternate" hreflang="x-default" href="https://vianney-aka.github.io/">
-
-    <!-- Favicon & Theme -->
-    <link rel="icon" type="image/png" href="assets/favicon.png">
-    <link rel="apple-touch-icon" href="assets/favicon.png">
-    <meta name="theme-color" content="#0a1628">
-    <meta name="msapplication-TileColor" content="#0a1628">
-    
-    <!-- JSON-LD Structured Data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "ProfilePage",
-      "mainEntity": {
-        "@type": "Person",
-        "name": "Aka Kouadio Bonnaventure Vianney",
-        "alternateName": "Vianney AKA",
-        "url": "https://vianney-aka.github.io/",
-        "image": "https://vianney-aka.github.io/assets/og-image.jpg",
-        "jobTitle": "Développeur Full Stack & Administrateur LMS",
-        "description": "Développeur Full Stack et Responsable IT avec plus de 5 ans d'expérience dans la conception de plateformes e-learning, la gestion de projets digitaux et le développement d'applications web et mobile.",
-        "knowsAbout": ["PHP", "Laravel", "Python", "Django", "Moodle", "WordPress", "Angular", "React Native", "MySQL", "PostgreSQL", "JavaScript", "HTML/CSS", "Git", "Linux", "E-learning", "LMS"],
-        "worksFor": [
-          {
-            "@type": "Organization",
-            "name": "Nounou Minute CI",
-            "url": "https://nounouminute.pro"
-          },
-          {
-            "@type": "Organization",
-            "name": "Impact'Lab UNESCO - CILIS",
-            "url": "https://www.impactlab-cilis.org"
-          }
-        ],
-        "alumniOf": [
-          {
-            "@type": "EducationalOrganization",
-            "name": "IFSM Cocody"
-          },
-          {
-            "@type": "EducationalOrganization",
-            "name": "PIGIER Côte d'Ivoire"
-          }
-        ],
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Abidjan",
-          "addressCountry": "CI"
-        },
-        "email": "contact@vianney-aka.com",
-        "telephone": "+225 07 89 81 43 08",
-        "sameAs": [
-          "https://github.com/vianney-aka",
-          "https://linkedin.com/in/vianney-aka"
-        ],
-        "knowsLanguage": [
-          {"@type": "Language", "name": "Français", "alternateName": "fr"},
-          {"@type": "Language", "name": "Anglais", "alternateName": "en"}
-        ]
-      }
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Portfolio Vianney AKA",
-      "url": "https://vianney-aka.github.io/",
-      "description": "Portfolio professionnel de Vianney AKA — Développeur Full Stack, Administrateur LMS & Chef de Projet Digital",
-      "inLanguage": "fr-FR",
-      "author": {
-        "@type": "Person",
-        "name": "Vianney AKA"
-      }
-    }
-    </script>
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="assets/styles.css">
-    <link rel="stylesheet" href="assets/effects.css">
-    
-    <title>Vianney AKA - Développeur Full Stack | Administrateur LMS & Chef de Projet Digital | Abidjan, Côte d'Ivoire</title>
-    
-    <!-- Schema.org Structured Data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Aka Kouadio Bonnaventure Vianney",
-      "alternateName": "Vianney AKA",
-      "url": "https://vianney-aka.github.io",
-      "image": "https://vianney-aka.github.io/assets/profile.jpg",
-      "jobTitle": "Développeur Full Stack & Administrateur LMS | Chef de Projet Digital",
-      "worksFor": [
-        {
-          "@type": "Organization",
-          "name": "Nounou Minute CI"
-        },
-        {
-          "@type": "Organization",
-          "name": "Impact'Lab UNESCO - CILIS"
-        }
-      ],
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Abidjan",
-        "addressCountry": "CI"
-      },
-      "email": "contact@vianney-aka.com",
-      "telephone": "+225-07-89-81-43-08",
-      "sameAs": [
-        "https://github.com/vianney-aka",
-        "https://linkedin.com/in/vianney-aka",
-        "https://twitter.com/vianney_aka",
-        "https://facebook.com/vianney.aka",
-        "https://instagram.com/vianney_aka"
-      ],
-      "knowsAbout": [
-        "E-Learning",
-        "Moodle",
-        "Laravel",
-        "Django",
-        "WordPress",
-        "Angular",
-        "React Native",
-        "Full Stack Development",
-        "LMS Development",
-        "PHP",
-        "Python",
-        "JavaScript",
-        "H5P",
-        "SCORM",
-        "TalentLMS",
-        "Rise360",
-        "PostgreSQL"
-      ],
-      "alumniOf": [
-        {
-          "@type": "EducationalOrganization",
-          "name": "IFSM Cocody"
-        },
-        {
-          "@type": "EducationalOrganization",
-          "name": "PIGIER Côte d'Ivoire"
-        }
-      ]
-    }
-    </script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vianney Aka — Développeur Full-Stack · Expert LMS · Chef de projet digital</title>
+<meta name="description" content="Portfolio de Aka Kouadio Bonnaventure Vianney — Développeur Full-Stack, administrateur LMS (Moodle) et chef de projet digital. Plateformes e-learning, applications web & mobiles à fort impact social." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Syne:wght@600;700;800&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <!-- Loader -->
-    <div class="loader" id="loader">
-        <div class="loader-content">
-            <div class="spinner"></div>
-            <p class="loader-text">Chargement...</p>
-        </div>
+
+<div class="bg-grid"></div>
+<div class="noise"></div>
+<div class="scroll-progress" id="progress"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<!-- ===================== NAV ===================== -->
+<header class="nav" id="nav">
+  <a href="#hero" class="brand" data-magnetic>
+    <img src="assets/images/logo.png" alt="Vianney Aka" />
+    <span>
+      <span class="brand-name">Vianney Aka</span><br />
+      <span class="brand-role" data-fr="Dév. Full-Stack · LMS" data-en="Full-Stack Dev · LMS">Dév. Full-Stack · LMS</span>
+    </span>
+  </a>
+
+  <nav class="nav-links" id="navLinks">
+    <a href="#about"   data-fr="À propos"      data-en="About">À propos</a>
+    <a href="#skills"  data-fr="Compétences"   data-en="Skills">Compétences</a>
+    <a href="#work"    data-fr="Projets"       data-en="Work">Projets</a>
+    <a href="#xp"      data-fr="Parcours"      data-en="Experience">Parcours</a>
+    <a href="#services" data-fr="Services"     data-en="Services">Services</a>
+    <a href="#contact" data-fr="Contact"       data-en="Contact">Contact</a>
+  </nav>
+
+  <div class="nav-tools">
+    <div class="lang-toggle" id="langToggle">
+      <button data-lang="fr" class="active">FR</button>
+      <button data-lang="en">EN</button>
+    </div>
+    <a href="#contact" class="btn btn-primary btn-sm" data-magnetic data-fr="Discutons" data-en="Let's talk">Discutons</a>
+    <button class="nav-burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="wrap">
+    <div class="hero-status stagger" data-d="1">
+      <span class="dot"></span>
+      <span id="heroStatus"></span>
     </div>
 
-    <!-- Navigation -->
-    <nav class="navbar" id="navbar">
-        <div class="container nav-container">
-            <a href="#home" class="logo">
-                <img src="assets/images/logo.png" alt="Vianney AKA" width="155" height="75" loading="lazy">
-            </a>
-            <button class="nav-toggle" id="navToggle" aria-label="Menu">
-                <span></span><span></span><span></span>
-            </button>
-            <ul class="nav-menu" id="navMenu">
-                <li><a href="#home" class="nav-link">Accueil</a></li>
-                <li><a href="#projects" class="nav-link">Projets</a></li>
-                <li><a href="#skills" class="nav-link">Compétences</a></li>
-                <li><a href="#experience" class="nav-link">Parcours</a></li>
-                <li><a href="#formation" class="nav-link">Formation</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
-                <li><button class="theme-toggle" id="themeToggle" aria-label="Theme">🌙</button></li>
-            </ul>
+    <h1>
+      <span class="line"><span>Vianney</span></span>
+      <span class="line"><span class="accent">Aka</span></span>
+    </h1>
+
+    <p class="hero-sub stagger" data-d="2" id="heroSub"></p>
+
+    <div class="hero-cta stagger" data-d="3">
+      <a href="#work" class="btn btn-primary" data-magnetic data-fr="Voir mes projets" data-en="View my work">Voir mes projets</a>
+      <a href="#contact" class="btn btn-ghost" data-magnetic data-fr="Me contacter" data-en="Get in touch">Me contacter</a>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="mouse"></div>
+    <span data-fr="Défiler" data-en="Scroll">Défiler</span>
+  </div>
+
+  <div class="hero-marquee">
+    <div class="track" id="marquee">
+      <span>Laravel</span><span>Django</span><span>React Native</span><span>Moodle</span><span>Angular</span><span>PHP</span><span>Python</span><span>MySQL</span><span>WordPress</span><span>Linux</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ABOUT ===================== -->
+<section id="about">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="kicker" data-fr="À propos" data-en="About">À propos</span>
+      <span class="section-num">01</span>
+    </div>
+
+    <div class="about-grid">
+      <div class="reveal">
+        <p class="about-lead" id="aboutLead"></p>
+        <div class="about-body" id="aboutBody"></div>
+      </div>
+
+      <aside class="about-side reveal" data-d="1">
+        <div class="about-portrait">
+          <image-slot id="portrait" style="width:100%;height:100%" shape="rect" fit="cover"
+            placeholder="Déposez votre portrait"></image-slot>
         </div>
-    </nav>
+        <div class="stats" id="statsGrid"></div>
+      </aside>
+    </div>
+  </div>
+</section>
 
-    <!-- Hero -->
-    <section class="hero" id="home">
-        <canvas id="particleCanvas" class="particle-canvas"></canvas>
-        <div class="container hero-container">
-            <div class="hero-content">
-                <p class="hero-greeting" data-editable="hero-greeting">Bonjour, je suis</p>
-                <h1 class="hero-title" data-editable="hero-title">Vianney AKA</h1>
-                <h2 class="hero-subtitle" data-editable="hero-subtitle">Développeur Full Stack | Administrateur LMS & Chef de Projet Digital</h2>
-                <p class="hero-description" data-editable="hero-description">
-                    Développeur Full Stack et Responsable IT avec plus de 5 ans d'expérience dans la conception de plateformes e-learning, 
-                    la gestion de projets digitaux et le développement d'applications web et mobile.
-                </p>
-                <div class="hero-cta">
-                    <a href="#projects" class="btn btn-primary">Voir mes projets →</a>
-                    <a href="#contact" class="btn btn-secondary">Me contacter</a>
-                </div>
-                <div class="hero-stats">
-                    <div class="stat"><span data-counter="5">0</span>Ans d'expérience</div>
-                    <div class="stat"><span data-counter="300">0</span>Jeunes formés</div>
-                    <div class="stat"><span data-counter="200">0</span>Utilisateurs actifs</div>
-                </div>
-            </div>
-            <div class="hero-image">
-                <img src="assets/profile.jpg" alt="Vianney AKA">
-            </div>
+<!-- ===================== SKILLS ===================== -->
+<section id="skills">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="kicker" data-fr="Compétences & Stack" data-en="Skills & Stack">Compétences & Stack</span>
+      <span class="section-num">02</span>
+    </div>
+
+    <div class="skills-grid" id="skillsGrid"></div>
+  </div>
+</section>
+
+<!-- ===================== PROJECTS ===================== -->
+<section id="work">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="kicker" data-fr="Projets sélectionnés" data-en="Selected work">Projets sélectionnés</span>
+      <span class="section-num">03</span>
+    </div>
+
+    <div class="projects" id="projectsList"></div>
+  </div>
+</section>
+
+<!-- ===================== EXPERIENCE ===================== -->
+<section id="xp">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="kicker" data-fr="Parcours" data-en="Experience">Parcours</span>
+      <span class="section-num">04</span>
+    </div>
+
+    <div class="timeline" id="timeline"></div>
+  </div>
+</section>
+
+<!-- ===================== CERTIFICATIONS & FORMATION ===================== -->
+<section id="certs">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="kicker" data-fr="Formation & Certifications" data-en="Education & Certifications">Formation & Certifications</span>
+      <span class="section-num">05</span>
+    </div>
+    <div class="certs-grid" id="certsGrid"></div>
+  </div>
+</section>
+
+<!-- ===================== SERVICES ===================== -->
+<section id="services">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="kicker" data-fr="Ce que je fais" data-en="What I do">Ce que je fais</span>
+      <span class="section-num">06</span>
+    </div>
+    <div class="services-grid" id="servicesGrid"></div>
+  </div>
+</section>
+
+<!-- ===================== CONTACT ===================== -->
+<section id="contact" class="contact">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div class="contact-lead reveal">
+        <span class="kicker" data-fr="Contact" data-en="Contact">Contact</span>
+        <h2 data-fr-html="Créons<br />quelque chose<br /><span class='accent'>ensemble.</span>"
+            data-en-html="Let's build<br />something<br /><span class='accent'>together.</span>">
+            Créons<br />quelque chose<br /><span class="accent">ensemble.</span>
+        </h2>
+        <p data-fr="Un projet en tête, une plateforme à construire ou une équipe à former ? Ma boîte de réception est ouverte."
+           data-en="A project in mind, a platform to build or a team to train? My inbox is open.">
+        </p>
+        <div class="contact-list" id="contactList"></div>
+      </div>
+
+      <form class="contact-form reveal" data-d="1" id="contactForm">
+        <div class="field">
+          <label data-fr="Nom" data-en="Name">Nom</label>
+          <input type="text" name="name" required />
         </div>
-    </section>
-
-    <!-- Projects -->
-    <section class="projects" id="projects">
-        <div class="container">
-            <div class="section-header" data-reveal>
-                <span class="label">Portfolio</span>
-                <h2>Projets Phares</h2>
-                <p>Découvrez mes réalisations qui allient excellence technique et impact social</p>
-            </div>
-
-            <div class="project-filters">
-                <button class="filter-btn active" data-filter="all">Tous</button>
-                <button class="filter-btn" data-filter="laravel">Laravel</button>
-                <button class="filter-btn" data-filter="moodle">Moodle</button>
-                <button class="filter-btn" data-filter="python">Python</button>
-            </div>
-
-            <div class="projects-grid">
-                <article class="project-card" data-category="moodle">
-                    <div class="project-image">
-                        <img src="assets/project-impactlab.jpg" alt="Impact'Lab UNESCO" loading="lazy">
-                        <a href="https://academy.impactlab-cilis.org" target="_blank" class="project-link">↗</a>
-                    </div>
-                    <div class="project-content">
-                        <h3>Impact'Lab UNESCO<span class="badge">Featured</span></h3>
-                        <p>Plateforme e-learning complète pour l'UNESCO. Architecture Moodle personnalisée avec modules interactifs.</p>
-                        <div class="metrics">
-                            <div><strong>200+</strong> Utilisateurs</div>
-                            <div><strong>95%</strong> Satisfaction</div>
-                        </div>
-                        <div class="tags">
-                            <span>Moodle</span><span>PHP</span><span>MySQL</span>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="project-card" data-category="laravel">
-                    <div class="project-image">
-                        <img src="assets/project-prosper.jpg" alt="Prosper Cashew" loading="lazy">
-                    </div>
-                    <div class="project-content">
-                        <h3>Prosper Cashew LMS<span class="badge">TechnoServe</span></h3>
-                        <p>LMS sur-mesure pour Prosper Cashew / TechnoServe avec vidéos, animations et quiz interactifs.</p>
-                        <div class="metrics">
-                            <div><strong>40%</strong> ↑ Engagement</div>
-                            <div><strong>15</strong> Formés</div>
-                        </div>
-                        <div class="tags">
-                            <span>Laravel</span><span>MySQL</span><span>Bootstrap</span>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="project-card" data-category="laravel">
-                    <div class="project-image">
-                        <img src="assets/project-speedkdo.jpg" alt="SpeedKDO" loading="lazy">
-                        <a href="https://www.speedkdo.com" target="_blank" class="project-link">↗</a>
-                    </div>
-                    <div class="project-content">
-                        <h3>SpeedKDO</h3>
-                        <p>Plateforme web moderne pour la gestion et l'envoi de cadeaux.</p>
-                        <div class="tags">
-                            <span>Laravel</span><span>Bootstrap</span><span>MySQL</span>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="project-card" data-category="laravel">
-                    <div class="project-image">
-                        <img src="assets/project-nounou.jpg" alt="Nounou Minute CI" loading="lazy">
-                    </div>
-                    <div class="project-content">
-                        <h3>Nounou Minute CI<span class="badge">Startup</span></h3>
-                        <p>Application mobile de mise en relation pour services de garde d'enfants avec géolocalisation et paiement mobile.</p>
-                        <div class="metrics">
-                            <div><strong>MVP</strong> en 3 mois</div>
-                            <div><strong>2</strong> Stores</div>
-                        </div>
-                        <div class="tags">
-                            <span>React Native</span><span>Laravel</span><span>Google Maps</span>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="project-card" data-category="python">
-                    <div class="project-image">
-                        <img src="assets/project-drone.jpg" alt="Drone 5G" loading="lazy">
-                    </div>
-                    <div class="project-content">
-                        <h3>Drone Patrouilleur 5G<span class="badge award">Finaliste</span></h3>
-                        <p>Système de surveillance intelligent avec Computer Vision. Finaliste Hackathon Orange.</p>
-                        <div class="tags">
-                            <span>Python</span><span>Raspberry Pi</span><span>CV</span>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="project-card" data-category="laravel">
-                    <div class="project-image">
-                        <img src="assets/project-wordpress.jpg" alt="Sites WordPress" loading="lazy">
-                    </div>
-                    <div class="project-content">
-                        <h3>Sites WordPress & Laravel</h3>
-                        <p>Conception de multiples sites professionnels : afcsm.com, acm-institute.com, dyvagroup.com</p>
-                        <div class="tags">
-                            <span>WordPress</span><span>Laravel</span><span>PHP</span>
-                        </div>
-                    </div>
-                </article>
-            </div>
+        <div class="field">
+          <label data-fr="Email" data-en="Email">Email</label>
+          <input type="email" name="email" required />
         </div>
-    </section>
-
-    <!-- Skills -->
-    <section class="skills" id="skills">
-        <div class="container">
-            <div class="section-header" data-reveal>
-                <span class="label">Expertise</span>
-                <h2>Stack Technique</h2>
-            </div>
-
-            <div class="skills-grid">
-                <div class="skill-category">
-                    <h3>🗄️ Backend</h3>
-                    <div class="skill-item">
-                        <span>🐘 PHP / Laravel</span>
-                        <div class="skill-bar"><div style="width: 95%"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span>🐍 Python / Django</span>
-                        <div class="skill-bar"><div style="width: 85%"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span>🟢 Node.js</span>
-                        <div class="skill-bar"><div style="width: 80%"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span>🗄️ MySQL / PostgreSQL</span>
-                        <div class="skill-bar"><div style="width: 90%"></div></div>
-                    </div>
-                </div>
-
-                <div class="skill-category">
-                    <h3>💻 Frontend</h3>
-                    <div class="skill-item">
-                        <span>🌐 HTML/CSS/JS</span>
-                        <div class="skill-bar"><div style="width: 95%"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span>🅰️ Angular</span>
-                        <div class="skill-bar"><div style="width: 80%"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span>⚛️ React Native</span>
-                        <div class="skill-bar"><div style="width: 75%"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span>🎨 Bootstrap</span>
-                        <div class="skill-bar"><div style="width: 90%"></div></div>
-                    </div>
-                </div>
-
-                <div class="skill-category">
-                    <h3>📚 CMS & LMS</h3>
-                    <div class="skill-item">
-                        <span>🎓 Moodle Expert</span>
-                        <div class="skill-bar"><div style="width: 95%"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span>📝 WordPress</span>
-                        <div class="skill-bar"><div style="width: 85%"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span>🧩 H5P / SCORM</span>
-                        <div class="skill-bar"><div style="width: 85%"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span>📊 TalentLMS</span>
-                        <div class="skill-bar"><div style="width: 80%"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span>🎯 Rise360</span>
-                        <div class="skill-bar"><div style="width: 80%"></div></div>
-                    </div>
-                </div>
-
-                <div class="skill-category">
-                    <h3>🛠️ DevOps & Outils</h3>
-                    <div class="skill-item">
-                        <span>🐙 Git / GitHub</span>
-                        <div class="skill-bar"><div style="width: 90%"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span>🐧 Linux</span>
-                        <div class="skill-bar"><div style="width: 85%"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span>📋 Jira / Trello</span>
-                        <div class="skill-bar"><div style="width: 80%"></div></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="certifications">
-                <h3>Certifications & Impact</h3>
-                <div class="cert-badges">
-                    <span>✓ Microsoft Excel 2016</span>
-                    <span>✓ Bénévole Formateur Programme VIA 2023 & 2024</span>
-                    <span>👨‍🎓 300+ jeunes formés</span>
-                    <span>🌍 UNESCO, TechnoServe & TotalEnergies</span>
-                </div>
-            </div>
+        <div class="field">
+          <label data-fr="Message" data-en="Message">Message</label>
+          <textarea name="message" rows="5" required></textarea>
         </div>
-    </section>
+        <button type="submit" class="btn btn-primary" data-magnetic data-fr="Envoyer le message" data-en="Send message">Envoyer le message</button>
+      </form>
+    </div>
+  </div>
+</section>
 
-    <!-- Experience -->
-    <section class="experience" id="experience">
-        <div class="container">
-            <div class="section-header" data-reveal>
-                <span class="label">Carrière</span>
-                <h2>Parcours Professionnel</h2>
-            </div>
+</main>
 
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-date">Sept. 2025 - Présent</div>
-                    <div class="timeline-content">
-                        <h3>Co-fondateur & CTO</h3>
-                        <h4>Nounou Minute CI</h4>
-                        <ul>
-                            <li>MVP fonctionnel en 3 mois (authentification, géolocalisation Google Maps, réservation)</li>
-                            <li>Intégration paiement mobile & messagerie temps réel avec notifications push</li>
-                            <li>Déploiement Google Play Store et App Store</li>
-                            <li>Création de la landing page (nounouminute.pro)</li>
-                        </ul>
-                    </div>
-                </div>
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-bigname">VIANNEY<br />AKA</div>
+      <div class="footer-links">
+        <a href="https://www.linkedin.com/in/akavianney/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.34 18.34V10.5H5.67v7.84h2.67zM7 9.32a1.55 1.55 0 1 0 0-3.1 1.55 1.55 0 0 0 0 3.1zm11.34 9.02v-4.3c0-2.3-1.23-3.37-2.87-3.37-1.32 0-1.91.73-2.24 1.24v-1.06h-2.67v7.84h2.67v-4.38c0-.23.02-.46.09-.62.18-.46.6-.94 1.3-.94.92 0 1.29.7 1.29 1.73v4.21h2.67z"/></svg></a>
+        <a href="https://github.com/vianney-aka" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49v-1.7c-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.35 1.12 2.92.86.09-.66.35-1.12.63-1.37-2.22-.26-4.55-1.14-4.55-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.73 0 0 .84-.28 2.75 1.05a9.4 9.4 0 0 1 5 0c1.91-1.33 2.75-1.05 2.75-1.05.55 1.42.2 2.47.1 2.73.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.82c0 .27.18.6.69.49A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/></svg></a>
+        <a href="mailto:aka.vianney@ik.me" aria-label="Email"><svg viewBox="0 0 24 24"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm9 7.4l8-5.2V6l-8 5.2L4 6v1.2l8 5.2z"/></svg></a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year">2026</span> Aka Kouadio Bonnaventure Vianney — <span data-fr="Tous droits réservés" data-en="All rights reserved">Tous droits réservés</span></span>
+      <span class="made"><span data-fr="Conçu & développé avec" data-en="Designed & built with">Conçu & développé avec</span> <b>♦</b> <span data-fr="à Abidjan" data-en="in Abidjan">à Abidjan</span></span>
+      <a href="admin.html" class="admin-link" data-fr="Espace admin →" data-en="Admin →">Espace admin →</a>
+    </div>
+  </div>
+</footer>
 
-                <div class="timeline-item">
-                    <div class="timeline-date">Août 2023 - Présent</div>
-                    <div class="timeline-content">
-                        <h3>Responsable Informatique & Chef de Projet</h3>
-                        <h4>Impact'Lab UNESCO - CILIS</h4>
-                        <ul>
-                            <li>Déploiement plateforme e-learning Moodle (200+ utilisateurs, 95% satisfaction)</li>
-                            <li>Chef projet Youth Mobile : formation de 120 jeunes en apps mobiles NOCODE</li>
-                            <li>Coordinateur plateforme Moodle projet Génie (GGGI / Primature / KOICA)</li>
-                            <li>Projet TEWA : formation de 30 femmes et intégration plateforme ISAHIT</li>
-                            <li>Refonte complète du site web impactlab-cilis.org</li>
-                        </ul>
-                    </div>
-                </div>
+<script src="image-slot.js"></script>
+<script src="content-data.js"></script>
+<script src="portfolio.js"></script>
 
-                <div class="timeline-item">
-                    <div class="timeline-date">Sept. 2024 - Juin 2025</div>
-                    <div class="timeline-content">
-                        <h3>Consultant en Digitalisation</h3>
-                        <h4>Prosper Cashew / TechnoServe</h4>
-                        <ul>
-                            <li>Développement LMS Laravel sur-mesure</li>
-                            <li>Formation 15 collaborateurs</li>
-                            <li>+40% engagement apprenants</li>
-                        </ul>
-                    </div>
-                </div>
+<!-- Tweaks panel (React) -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="tweaks-app.jsx"></script>
 
-                <div class="timeline-item">
-                    <div class="timeline-date">Nov. 2022 - Août 2023</div>
-                    <div class="timeline-content">
-                        <h3>Développeur Web & Formateur WordPress</h3>
-                        <h4>Villa HOH | L'univers de l'intelligence collective</h4>
-                        <ul>
-                            <li>Création de sites internet avec Laravel</li>
-                            <li>Formation de la 3ème cohorte de 60 jeunes (projet Projeunes - ONG IRC)</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="timeline-item">
-                    <div class="timeline-date">Juin - Nov. 2022</div>
-                    <div class="timeline-content">
-                        <h3>Finaliste Hackathon 5G</h3>
-                        <h4>Orange Côte d'Ivoire - Orange Digital Center</h4>
-                        <ul>
-                            <li>Drone patrouilleur intelligent (Raspberry Pi 4, caméra, détection de mouvement)</li>
-                            <li>Application web de gestion des alertes citoyens</li>
-                            <li>Application de bureau pour pilotage du drone à distance</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="timeline-item">
-                    <div class="timeline-date">Fév. - Juin 2022</div>
-                    <div class="timeline-content">
-                        <h3>Chef Projet Web & Formateur WordPress</h3>
-                        <h4>Villa HOH | L'univers de l'intelligence collective</h4>
-                        <ul>
-                            <li>Création de sites web avec Laravel et WordPress</li>
-                            <li>Formation de la 2ème cohorte de 120 jeunes à Abidjan et Korhogo (projet Projeunes - ONG IRC)</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="timeline-item">
-                    <div class="timeline-date">Juin 2020 - Fév. 2022</div>
-                    <div class="timeline-content">
-                        <h3>Stage & Assistant Chef Projet Web</h3>
-                        <h4>Villa HOH | L'univers de l'intelligence collective</h4>
-                        <ul>
-                            <li>Création de sites web avec Laravel et déploiement Agora Project</li>
-                            <li>Mise en place plateforme e-learning Moodle</li>
-                            <li>Gestion de bases de données MySQL</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Formation -->
-    <section class="formation" id="formation">
-        <div class="container">
-            <div class="section-header" data-reveal>
-                <span class="label">Études</span>
-                <h2>Formation</h2>
-            </div>
-
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-date">IFSM Cocody</div>
-                    <div class="timeline-content">
-                        <h3>Licence 3 Réseaux Telecom et Génie Logiciel</h3>
-                    </div>
-                </div>
-
-                <div class="timeline-item">
-                    <div class="timeline-date">Fév. 2017 - Juil. 2019</div>
-                    <div class="timeline-content">
-                        <h3>BTS Informatique - Développeur d'Application</h3>
-                        <h4>PIGIER Côte d'Ivoire</h4>
-                        <p>Licence Professionnelle 1ère et 2ème année - Option Réseaux et Génie Logiciel</p>
-                    </div>
-                </div>
-
-                <div class="timeline-item">
-                    <div class="timeline-date">Nov. 2015 - Juil. 2016</div>
-                    <div class="timeline-content">
-                        <h3>Baccalauréat D</h3>
-                        <h4>Institut LKM</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact -->
-    <section class="contact" id="contact">
-        <div class="container">
-            <div class="section-header" data-reveal>
-                <span class="label">Parlons-en</span>
-                <h2>Me Contacter</h2>
-                <p>Vous avez un projet ? Discutons de comment je peux vous aider</p>
-            </div>
-
-            <div class="contact-wrapper">
-                <div class="contact-info">
-                    <div class="info-item">
-                        <span class="icon">📧</span>
-                        <div>
-                            <h4>Email</h4>
-                            <a href="mailto:contact@vianney-aka.com">contact@vianney-aka.com</a>
-                        </div>
-                    </div>
-                    <div class="info-item">
-                        <span class="icon">📱</span>
-                        <div>
-                            <h4>Téléphone</h4>
-                            <a href="tel:+2250789814308">+225 07 89 81 43 08</a>
-                            <a href="tel:+2250140399580">+225 01 40 39 95 80</a>
-                        </div>
-                    </div>
-                    <div class="info-item">
-                        <span class="icon">📍</span>
-                        <div>
-                            <h4>Localisation</h4>
-                            <p>Abidjan, Côte d'Ivoire</p>
-                        </div>
-                    </div>
-                    <div class="social-links">
-                        <!-- GitHub -->
-                        <a href="https://github.com/vianney-aka" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="Suivez-moi sur GitHub">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                            </svg>
-                        </a>
-                        
-                        <!-- LinkedIn -->
-                        <a href="https://www.linkedin.com/in/akavianney/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="Connectez avec moi sur LinkedIn">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                            </svg>
-                        </a>
-                        
-                        <!-- Twitter/X -->
-                        <a href="https://twitter.com/vianney_aka" target="_blank" rel="noopener noreferrer" aria-label="Twitter" title="Suivez-moi sur Twitter/X">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                            </svg>
-                        </a>
-                        
-                        <!-- Facebook -->
-                        <a href="https://facebook.com/vianney.aka" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Rejoignez-moi sur Facebook">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                            </svg>
-                        </a>
-                        <!-- Instagram -->
-                        <a href="https://instagram.com/vianney_aka" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Suivez-moi sur Instagram">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                            </svg>
-                        </a>
-                        
-                        <!-- WhatsApp -->
-                        <a href="https://wa.me/2250789814308" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" title="Contactez-moi sur WhatsApp">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-                            </svg>
-                        </a>
-                        
-                        <!-- YouTube (optionnel) -->
-                        <a href="https://youtube.com/@vianney_aka" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="Abonnez-vous à ma chaîne YouTube">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-
-                <form class="contact-form" id="contactForm" action="https://formspree.io/f/mldpkvee" method="POST">
-                    <div class="form-group">
-                        <input type="text" name="name" placeholder="Votre nom" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" name="email" placeholder="Votre email" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" name="subject" placeholder="Sujet">
-                    </div>
-                    <div class="form-group">
-                        <textarea name="message" rows="5" placeholder="Votre message" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Envoyer le message</button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <h3>Vianney AKA</h3>
-                    <p>Développeur Full Stack passionné par l'e-learning et l'impact social</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Navigation</h4>
-                    <a href="#projects">Projets</a>
-                    <a href="#skills">Compétences</a>
-                    <a href="#experience">Parcours</a>
-                    <a href="#formation">Formation</a>
-                    <a href="#contact">Contact</a>
-                </div>
-                <div class="footer-contact">
-                    <h4>Contact</h4>
-                    <p>+225 07 89 81 43 08</p>
-                    <p>contact@vianney-aka.com</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Vianney AKA. Made with ❤️ in Côte d'Ivoire</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="assets/script.js"></script>
-    <script src="assets/effects.js"></script>
-    <script src="assets/analytics.js"></script>
-    <script src="assets/content-loader.js"></script>
 </body>
 </html>
