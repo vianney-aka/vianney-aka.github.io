@@ -419,14 +419,14 @@ section{ padding:140px 0; position:relative; }
    ============================================================ */
 [data-theme="light"]{
   --bg:        #f4f9f6;
-  --bg-2:      #eaf4ef;
-  --surface:   #ddeee5;
-  --surface-2: #cfe6d9;
-  --line:      rgba(0,0,0,.09);
-  --line-2:    rgba(0,0,0,.16);
-  --text:      #0d1f15;
-  --text-2:    #3d5a47;
-  --text-3:    #7a9a85;
+  --bg-2:      #e9f3ed;
+  --surface:   #d8e9df;
+  --surface-2: #c8ddd2;
+  --line:      rgba(0,0,0,.13);
+  --line-2:    rgba(0,0,0,.22);
+  --text:      #060f09;
+  --text-2:    #1c3326;
+  --text-3:    #4a6255;
   --accent-glow: rgba(19,192,107,.18);
 }
 [data-theme="light"] body::before{
@@ -522,3 +522,92 @@ section{ padding:140px 0; position:relative; }
   .about-stats{ grid-template-columns:1fr; }
   .lang-toggle button{ padding:6px 10px; font-size:11px; }
 }
+
+/* ============================================================
+   LIGHT MODE — overrides elements specifiques
+   ============================================================ */
+
+/* Chip / badges */
+[data-theme="light"] .chip{
+  background:rgba(0,0,0,.07);
+  border-color:rgba(0,0,0,.16);
+  color:var(--text-2);
+}
+[data-theme="light"] .chip:hover{
+  color:var(--accent-deep);
+  border-color:var(--accent-deep);
+  background:rgba(19,192,107,.1);
+}
+
+/* Nav hover */
+[data-theme="light"] .nav-links a:hover{ background:rgba(0,0,0,.05); }
+[data-theme="light"] .nav.open .nav-links{
+  background:rgba(244,249,246,.97);
+  border-color:var(--line);
+}
+
+/* Curseur adapte */
+[data-theme="light"] .cursor-dot{ background:var(--accent-deep); }
+[data-theme="light"] .cursor-ring{
+  border-color:rgba(0,0,0,.35);
+}
+[data-theme="light"] .cursor-ring.hover{ background:rgba(0,0,0,.05); }
+
+/* Barre de progression */
+[data-theme="light"] .scroll-progress{ background:var(--accent-deep); }
+
+/* Hero — texte lisible */
+[data-theme="light"] .hero-status{ color:var(--text-3); }
+[data-theme="light"] .about-lead em{ color:var(--accent-deep); }
+
+/* Marquee */
+[data-theme="light"] .hero-marquee{
+  -webkit-mask-image:linear-gradient(90deg,transparent,#f4f9f6 8%,#f4f9f6 92%,transparent);
+          mask-image:linear-gradient(90deg,transparent,#f4f9f6 8%,#f4f9f6 92%,transparent);
+}
+
+/* Cards / surfaces */
+[data-theme="light"] .skill-card,
+[data-theme="light"] .project-media,
+[data-theme="light"] .cert-card,
+[data-theme="light"] .service-card,
+[data-theme="light"] .contact-card{
+  background:var(--bg-2);
+  border-color:var(--line);
+}
+
+/* Tags de projet */
+[data-theme="light"] .proj-tag{
+  background:rgba(0,0,0,.07);
+  color:var(--text-3);
+}
+
+/* Section numéros */
+[data-theme="light"] .section-num{ color:var(--accent-deep); opacity:.6; }
+
+/* Footer grand nom */
+[data-theme="light"] .footer-bigname{
+  -webkit-text-stroke-color: rgba(0,0,0,.14);
+  color:transparent;
+}
+[data-theme="light"] footer{ background:var(--bg-2); border-color:var(--line); }
+
+/* Boutons ghost */
+[data-theme="light"] .btn-ghost{
+  color:var(--text-2);
+  border-color:rgba(0,0,0,.22);
+}
+[data-theme="light"] .btn-ghost:hover{
+  color:var(--accent-deep);
+  border-color:var(--accent-deep);
+}
+
+/* Inputs / select */
+[data-theme="light"] input,[data-theme="light"] textarea,[data-theme="light"] select{
+  background:var(--bg);
+  color:var(--text);
+  border-color:rgba(0,0,0,.18);
+}
+
+/* Scrollbar */
+[data-theme="light"] ::-webkit-scrollbar-thumb{ background:#a8c4b2; }
