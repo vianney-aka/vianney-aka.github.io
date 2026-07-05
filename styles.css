@@ -40,18 +40,9 @@ html{ scroll-behavior:smooth; -webkit-font-smoothing:antialiased; }
 :focus-visible{ outline:2px solid var(--accent-bright); outline-offset:3px; border-radius:6px; }
 .field input:focus-visible, .field textarea:focus-visible{ outline:2px solid var(--accent-bright); outline-offset:2px; }
 
-/* ---- Accessibilité : respect de prefers-reduced-motion (règle reduced-motion) ---- */
-@media (prefers-reduced-motion: reduce){
-  html{ scroll-behavior:auto; }
-  *, *::before, *::after{
-    animation-duration:.001ms !important;
-    animation-iteration-count:1 !important;
-    transition-duration:.001ms !important;
-    scroll-behavior:auto !important;
-  }
-  .reveal{ opacity:1 !important; transform:none !important; }
-  .hero-marquee .track{ animation:none !important; }
-}
+/* ---- Accessibilité : prefers-reduced-motion — on désactive seulement le défilement lissé,
+       les animations décoratives du portfolio restent (choix assumé pour ce site vitrine) ---- */
+@media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
 
 body{
   background:var(--bg);
