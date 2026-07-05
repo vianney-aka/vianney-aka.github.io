@@ -237,8 +237,8 @@
   const hero = $('#hero');
   requestAnimationFrame(() => requestAnimationFrame(() => hero.classList.add('ready')));
 
-  /* ---------- skill spotlight ---------- */
-  $$('.skill-card').forEach(card => {
+  /* ---------- spotlight curseur (cartes) ---------- */
+  $$('.skill-card, .cert, .service, .project-media').forEach(card => {
     card.addEventListener('pointermove', (e) => {
       const r = card.getBoundingClientRect();
       card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
