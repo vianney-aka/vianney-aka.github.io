@@ -152,8 +152,8 @@ const PortfolioDB = (function () {
     const settings = {
       hero_greeting: 'Bonjour, je suis',
       hero_title: 'Vianney AKA',
-      hero_subtitle: 'Développeur Full Stack | Administrateur LMS & Chef de Projet Digital',
-      hero_description: "Développeur Full Stack et Responsable IT avec plus de 5 ans d'expérience dans la conception de plateformes e-learning, la gestion de projets digitaux et le développement d'applications web et mobile.",
+      hero_subtitle: 'Développeur Full Stack | Responsable IT & Digitalisation | Expert Moodle / LMS',
+      hero_description: "Développeur Full Stack et Responsable IT & Digitalisation avec plus de 5 ans d'expérience dans la conception de plateformes e-learning (Moodle/LMS), la gestion de projets numériques et le développement d'applications web et mobiles (Next.js, Django/DRF, Laravel, React Native).",
       stat_experience: '5',
       stat_youth: '300',
       stat_users: '200',
@@ -170,10 +170,10 @@ const PortfolioDB = (function () {
 
     // Projects
     const projects = [
-      { title: "Impact'Lab UNESCO", badge: 'Featured', badge_type: 'default', description: "Plateforme e-learning complète pour l'UNESCO. Architecture Moodle personnalisée avec modules interactifs.", image_url: 'assets/project-impactlab.jpg', link_url: 'https://academy.impactlab-cilis.org', category: 'moodle', metrics_json: JSON.stringify([{label:'Utilisateurs',value:'200+'},{label:'Satisfaction',value:'95%'}]), tags_json: JSON.stringify(['Moodle','PHP','MySQL']), sort_order: 1 },
+      { title: "Academy Impact'Lab Green Digital", badge: 'Featured', badge_type: 'default', description: "Plateforme e-learning Moodle : 6 branches de catégories, 7 rôles personnalisés, plugins (customcert, configurable_reports) et thème enfant Boost. Migration de contenus SCORM Genially vers 65 quiz H5P.", image_url: 'assets/project-impactlab.jpg', link_url: 'https://academy.impactlab-cilis.org', category: 'moodle', metrics_json: JSON.stringify([{label:'Utilisateurs',value:'200+'},{label:'Satisfaction',value:'95%'}]), tags_json: JSON.stringify(['Moodle','Thème Boost','H5P','Nextcloud']), sort_order: 1 },
       { title: 'Prosper Cashew LMS', badge: 'TechnoServe', badge_type: 'default', description: 'LMS sur-mesure pour Prosper Cashew / TechnoServe avec vidéos, animations et quiz interactifs.', image_url: 'assets/project-prosper.jpg', link_url: '', category: 'laravel', metrics_json: JSON.stringify([{label:'Engagement',value:'40% ↑'},{label:'Formés',value:'15'}]), tags_json: JSON.stringify(['Laravel','MySQL','Bootstrap']), sort_order: 2 },
       { title: 'SpeedKDO', badge: '', badge_type: 'default', description: "Plateforme web moderne pour la gestion et l'envoi de cadeaux.", image_url: 'assets/project-speedkdo.jpg', link_url: 'https://www.speedkdo.com', category: 'laravel', metrics_json: '[]', tags_json: JSON.stringify(['Laravel','Bootstrap','MySQL']), sort_order: 3 },
-      { title: 'Nounou Minute CI', badge: 'Startup', badge_type: 'default', description: "Application mobile de mise en relation pour services de garde d'enfants avec géolocalisation et paiement mobile.", image_url: 'assets/project-nounou.jpg', link_url: '', category: 'laravel', metrics_json: JSON.stringify([{label:'MVP',value:'3 mois'},{label:'Stores',value:'2'}]), tags_json: JSON.stringify(['React Native','Laravel','Google Maps']), sort_order: 4 },
+      { title: 'Nounou Minute CI', badge: 'Startup', badge_type: 'default', description: "Marketplace mobile de garde d'enfants (React Native + backend Next.js) : géolocalisation et itinéraire temps réel (Google Routes API v2), paiements Mobile Money, messagerie temps réel avec notifications push et système d'avis.", image_url: 'assets/project-nounou.jpg', link_url: 'https://nounouminute.pro', category: 'laravel', metrics_json: JSON.stringify([{label:'MVP',value:'3 mois'},{label:'Stores',value:'2'}]), tags_json: JSON.stringify(['React Native','Next.js','Google Routes API','Mobile Money']), sort_order: 4 },
       { title: 'Drone Patrouilleur 5G', badge: 'Finaliste', badge_type: 'award', description: 'Système de surveillance intelligent avec Computer Vision. Finaliste Hackathon Orange.', image_url: 'assets/project-drone.jpg', link_url: '', category: 'python', metrics_json: '[]', tags_json: JSON.stringify(['Python','Raspberry Pi','CV']), sort_order: 5 },
       { title: 'Sites WordPress & Laravel', badge: '', badge_type: 'default', description: 'Conception de multiples sites professionnels : afcsm.com, acm-institute.com, dyvagroup.com', image_url: 'assets/project-wordpress.jpg', link_url: '', category: 'laravel', metrics_json: '[]', tags_json: JSON.stringify(['WordPress','Laravel','PHP']), sort_order: 6 }
     ];
@@ -183,10 +183,10 @@ const PortfolioDB = (function () {
 
     // Skill categories + skills
     const skillData = [
-      { name: 'Backend', icon: '🗄️', sort_order: 1, skills: [{name:'🐘 PHP / Laravel',level:95},{name:'🐍 Python / Django',level:85},{name:'🟢 Node.js',level:80},{name:'🗄️ MySQL / PostgreSQL',level:90}] },
-      { name: 'Frontend', icon: '💻', sort_order: 2, skills: [{name:'🌐 HTML/CSS/JS',level:95},{name:'🅰️ Angular',level:80},{name:'⚛️ React Native',level:75},{name:'🎨 Bootstrap',level:90}] },
-      { name: 'CMS & LMS', icon: '📚', sort_order: 3, skills: [{name:'🎓 Moodle Expert',level:95},{name:'📝 WordPress',level:85},{name:'🧩 H5P / SCORM',level:85},{name:'📊 TalentLMS',level:80},{name:'🎯 Rise360',level:80}] },
-      { name: 'DevOps & Outils', icon: '🛠️', sort_order: 4, skills: [{name:'🐙 Git / GitHub',level:90},{name:'🐧 Linux',level:85},{name:'📋 Jira / Trello',level:80}] }
+      { name: 'Backend', icon: '🗄️', sort_order: 1, skills: [{name:'🐘 PHP / Laravel',level:95},{name:'🐍 Python / Django · DRF',level:88},{name:'▲ Next.js (API)',level:85},{name:'🗄️ PostgreSQL / MySQL',level:90},{name:'🔴 Redis',level:78}] },
+      { name: 'Frontend & Mobile', icon: '💻', sort_order: 2, skills: [{name:'🌐 HTML/CSS/JS',level:95},{name:'⚛️ Next.js / React',level:85},{name:'📱 React Native',level:80},{name:'🔷 TypeScript',level:82},{name:'△ Prisma',level:80},{name:'🎨 Bootstrap',level:90}] },
+      { name: 'CMS & LMS', icon: '📚', sort_order: 3, skills: [{name:'🎓 Moodle Expert · Thème Boost',level:95},{name:'📝 WordPress',level:85},{name:'🧩 H5P / SCORM',level:85},{name:'📊 TalentLMS',level:80},{name:'🎯 Rise360',level:80}] },
+      { name: 'DevOps & Outils', icon: '🛠️', sort_order: 4, skills: [{name:'🐙 Git / GitHub',level:90},{name:'🐧 Linux (VPS)',level:85},{name:'🌐 Nginx / PHP-FPM',level:82},{name:'☁️ Nextcloud',level:80},{name:'📋 Jira / Trello',level:80}] }
     ];
     skillData.forEach(cat => {
       db.run('INSERT INTO skill_categories (name, icon, sort_order) VALUES (?,?,?)', [cat.name, cat.icon, cat.sort_order]);
@@ -198,8 +198,8 @@ const PortfolioDB = (function () {
 
     // Experiences
     const experiences = [
-      { date_range: 'Sept. 2025 - Présent', title: 'Co-fondateur & CTO', company: 'Nounou Minute CI', items_json: JSON.stringify(['MVP fonctionnel en 3 mois (authentification, géolocalisation Google Maps, réservation)','Intégration paiement mobile & messagerie temps réel avec notifications push','Déploiement Google Play Store et App Store','Création de la landing page (nounouminute.pro)']), sort_order: 1 },
-      { date_range: 'Août 2023 - Présent', title: 'Responsable Informatique & Chef de Projet', company: "Impact'Lab UNESCO - CILIS", items_json: JSON.stringify(["Déploiement plateforme e-learning Moodle (200+ utilisateurs, 95% satisfaction)","Chef projet Youth Mobile : formation de 120 jeunes en apps mobiles NOCODE","Coordinateur plateforme Moodle projet Génie (GGGI / Primature / KOICA)","Projet TEWA : formation de 30 femmes et intégration plateforme ISAHIT","Refonte complète du site web impactlab-cilis.org"]), sort_order: 2 },
+      { date_range: 'Sept. 2025 - Présent', title: 'Co-fondateur & Directeur Technique (CTO)', company: 'Nounou Minute CI', items_json: JSON.stringify(['MVP fonctionnel en 3 mois : architecture React Native + backend Next.js (4 rôles utilisateurs)','Géolocalisation et itinéraire temps réel (Google Routes API v2, proxy backend sécurisé)','Paiements Mobile Money & messagerie temps réel avec notifications push','Documentation REST de l\'API (45 pages), déploiement Google Play Store et App Store']), sort_order: 1 },
+      { date_range: 'Août 2023 - Présent', title: 'Responsable IT & Digitalisation', company: "Impact'Lab Green Digital", items_json: JSON.stringify(["Déploiement plateforme e-learning Moodle (200+ utilisateurs, 95% satisfaction)","Infrastructure interne : Nextcloud, pools PHP-FPM dédiés, Redis, OAuth2 Google Drive","Chef projet Youth Mobile : formation de 120 jeunes en apps mobiles NoCode","Coordinateur plateforme Moodle projet Génie (GGGI / Primature / KOICA)","Projet TEWA : formation de 30 femmes et intégration plateforme ISAHIT","Refonte complète du site web impactlab-cilis.org"]), sort_order: 2 },
       { date_range: 'Sept. 2024 - Juin 2025', title: 'Consultant en Digitalisation', company: 'Prosper Cashew / TechnoServe', items_json: JSON.stringify(['Développement LMS Laravel sur-mesure','Formation 15 collaborateurs','+40% engagement apprenants']), sort_order: 3 },
       { date_range: 'Nov. 2022 - Août 2023', title: 'Développeur Web & Formateur WordPress', company: "Villa HOH | L'univers de l'intelligence collective", items_json: JSON.stringify(['Création de sites internet avec Laravel','Formation de la 3ème cohorte de 60 jeunes (projet Projeunes - ONG IRC)']), sort_order: 4 },
       { date_range: 'Juin - Nov. 2022', title: 'Finaliste Hackathon 5G', company: 'Orange Côte d\'Ivoire - Orange Digital Center', items_json: JSON.stringify(['Drone patrouilleur intelligent (Raspberry Pi 4, caméra, détection de mouvement)','Application web de gestion des alertes citoyens','Application de bureau pour pilotage du drone à distance']), sort_order: 5 },
@@ -225,7 +225,7 @@ const PortfolioDB = (function () {
       { name: '✓ Microsoft Excel 2016', sort_order: 1 },
       { name: '✓ Bénévole Formateur Programme VIA 2023 & 2024', sort_order: 2 },
       { name: '👨‍🎓 300+ jeunes formés', sort_order: 3 },
-      { name: '🌍 UNESCO, TechnoServe & TotalEnergies', sort_order: 4 }
+      { name: '🌍 GGGI / KOICA, TechnoServe & TotalEnergies', sort_order: 4 }
     ];
     const stmtC = db.prepare('INSERT INTO certifications (name, sort_order) VALUES (?,?)');
     certs.forEach(c => { stmtC.run([c.name, c.sort_order]); });
